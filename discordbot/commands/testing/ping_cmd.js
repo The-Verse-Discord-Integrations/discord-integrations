@@ -6,7 +6,8 @@ module.exports = {
         .setDescription("Replies with pong"),
 
     async execute(interaction) {
-        await interaction.reply('Pong!')
-        console.log("hello");
+        await interaction.reply({ content: "hello", ephemeral: true });
+        await interaction.followUp({ content: "second hello", ephemeral: true });
+        await interaction.deleteReply();
     }
 }
