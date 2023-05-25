@@ -1,2 +1,2 @@
 # discord-integration
-Integration of monday.com into discord servers for management and automation
+Integration of a thrid party management tool into discord servers for management and automation
