@@ -1,4 +1,4 @@
-import config from './utils/config.js';
-import client from './discordbot/discordapp.js';
+const config = require('./utils/config.js')
+const client = require('./discordbot/discordapp.js')
 
 client.login(config.DISC_TOKEN)

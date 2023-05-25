@@ -1,8 +1,11 @@
-import { config } from 'dotenv';
-config();
+require("dotenv").config();
 
 let DISC_TOKEN = process.env.DISC_TOKEN
+let DISC_CLIENTID = process.env.DISC_CLIENTID
+let DISC_GUILDID = process.env.DISC_GUILDID
 
-export default {
-    DISC_TOKEN
+module.exports = {
+    DISC_TOKEN,
+    DISC_CLIENTID,
+    DISC_GUILDID
 }

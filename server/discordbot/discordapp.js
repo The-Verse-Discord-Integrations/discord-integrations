@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 // Require the necessary discord.js classes
-import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
+const { Client, Collection, Events, GatewayIntentBits } = require('discord.js')
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -59,4 +59,4 @@ client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 
-export default client
+module.exports = client
