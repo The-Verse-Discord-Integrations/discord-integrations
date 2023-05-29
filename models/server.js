@@ -24,10 +24,22 @@ const serverSchema = new mongoose.Schema({
     },
   ],
   members: [
-    // Ref to user objects
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Member",
+    },
   ],
   admins: [
-    // Ref to user objects
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Member",
+    }
+  ],
+  roles: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Role",
+    }
   ],
 });
 
