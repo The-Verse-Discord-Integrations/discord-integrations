@@ -44,5 +44,3 @@ const rest = new REST().setToken(process.env.DISC_TOKEN);
 		console.error(error);
 	}
 })();
-
-console.log('hello');
