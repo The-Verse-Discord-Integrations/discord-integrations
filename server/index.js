@@ -1,12 +1,12 @@
-const config = require('./utils/config.js')
-const client = require('./discordbot/discordapp.js')
+const { DISC_TOKEN, MONGODB_URI } = require("./utils/config.js");
+const client = require("./src/discordapp.js");
 const mongoose = require("mongoose");
 
 mongoose.set("strictQuery", false);
 
 // Connecting to database
 mongoose
-  .connect(config.MONGODB_URI)
+  .connect(MONGODB_URI)
   .then(() => {
     console.log("connected to MongoDB");
   })
@@ -14,6 +14,5 @@ mongoose
     console.error("error connection to MongoDB:", error.message);
   });
 
-
 // Connecting Discord Bot
-client.login(config.DISC_TOKEN)
+client.login(DISC_TOKEN);
