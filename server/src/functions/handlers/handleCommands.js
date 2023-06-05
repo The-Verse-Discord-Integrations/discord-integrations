@@ -40,7 +40,6 @@ module.exports = (client) => {
         Routes.applicationGuildCommands(DISC_CLIENTID, DISC_GUILDID),
         { body: client.commandArray }
       );
-      console.log(data);
       console.log(
         `Successfully reloaded ${data.length} application (/) commands.`
       );

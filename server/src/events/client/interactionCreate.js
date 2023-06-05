@@ -16,6 +16,18 @@ module.exports = {
           ephemeral: true,
         });
       }
+    } else if (interaction.isButton()) {
+        const { buttons } = client;
+        const { customId } = interaction;
+        const button = buttons.get(customId);
+
+        if (!button) return new Error('there is no code for this button');
+
+        try {
+            await button.execute(interaction, client);
+        } catch (error) {
+            console.error(error);
+        }
     }
   },
 };

@@ -11,10 +11,12 @@ const client = new Client({
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessageReactions
   ],
 });
 
 client.commands = new Collection();
+client.buttons = new Collection();
 client.commandArray = []
 
 // When a user joins they will be given these two roles
@@ -40,5 +42,6 @@ for (const folder of functionFolders) {
 
 client.handleCommands();
 client.handleEvents();
+client.handleComponents();
 
 module.exports = client;
