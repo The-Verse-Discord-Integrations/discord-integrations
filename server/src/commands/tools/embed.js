@@ -19,6 +19,9 @@ module.exports = {
             title: "View Projects",
             description: "Toggle the projects you want to view :arrow_down:",
             fields: [],
+            thumbnail: {
+              "url": "https://media.licdn.com/dms/image/C560BAQGZsRf5Ro6Zbg/company-logo_200_200/0/1631752036761?e=2147483647&v=beta&t=kVWNkg1BQJDVWm4UhD8L8OmOLxhx_xc2Kc_-V_hC7DQ"
+            }
         });
 
         // Creating an actionRow
@@ -107,6 +110,9 @@ module.exports = {
 //     title: "View Projects",
 //     description: "Toggle the projects you want to view :arrow_down:",
 //     fields: [],
+//     thumbnail: {
+//       "url": "https://media.licdn.com/dms/image/C560BAQGZsRf5Ro6Zbg/company-logo_200_200/0/1631752036761?e=2147483647&v=beta&t=kVWNkg1BQJDVWm4UhD8L8OmOLxhx_xc2Kc_-V_hC7DQ"
+//     }
 // });
 
 // // Creating an actionRow
