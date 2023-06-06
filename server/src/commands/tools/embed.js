@@ -29,37 +29,19 @@ module.exports = {
 
     const button = new ButtonBuilder()
       .setLabel("Discord & Beyond")
-      .setCustomId("Discord & Beyond")
+      .setCustomId("toggleRole:1113541353402536088:Discord & Beyond")
       .setStyle("Primary")
       .setEmoji("🌐");
 
-    actionRow.addComponents(button);
-
-    buttons.set("Discord & Beyond", {
-      data: {
-        name: "Discord & Beyond",
-      },
-      async execute(interaction, client) {
-        interaction.reply("Add Discord & Beyond viewer");
-      },
-    });
-
     const button2 = new ButtonBuilder()
       .setLabel("Sound & Color")
-      .setCustomId("Sound & Color")
+      .setCustomId("toggleRole:1115208435336749056:Sound & Color")
       .setStyle("Primary")
       .setEmoji("🎨")
 
+    actionRow.addComponents(button);
     actionRow.addComponents(button2);
 
-    buttons.set("Sound & Color", {
-      data: {
-        name: "Sound & Color",
-      },
-      async execute(interaction, client) {
-        interaction.reply("Add Sound & Color viewer");
-      },
-    })
     await interaction.deleteReply();
     await interaction.channel.send({
       embeds: [embed],
