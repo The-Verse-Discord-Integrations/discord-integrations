@@ -1,54 +1,54 @@
 const {
-  SlashCommandBuilder,
-  EmbedBuilder,
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
+    SlashCommandBuilder,
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
 } = require("discord.js");
 
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("embed")
-    .setDescription("Creates an embed"),
-  async execute(interaction, client) {
-    await interaction.deferReply();
+    data: new SlashCommandBuilder()
+        .setName("embed")
+        .setDescription("Creates an embed"),
+    async execute(interaction, client) {
+        await interaction.deferReply();
 
-    // Creating the embed
-    const embed = new EmbedBuilder({
-      id: 703906876,
-      title: "View Projects",
-      description: "Toggle the projects you want to view :arrow_down:",
-      fields: [],
-    });
+        // Creating the embed
+        const embed = new EmbedBuilder({
+            id: 703906876,
+            title: "View Projects",
+            description: "Toggle the projects you want to view :arrow_down:",
+            fields: [],
+        });
 
-    // Creating an actionRow
-    const actionRow = new ActionRowBuilder();
-    const { buttons } = client;
+        // Creating an actionRow
+        const actionRow = new ActionRowBuilder();
+        const { buttons } = client;
 
-    // Pull from the database all of the buttons that the company has to offer
-    // For now we will just create two buttons
-    const button = new ButtonBuilder()
-      .setLabel("Discord & Beyond")
-      .setCustomId("toggleViewRole:1113541353402536088:Discord & Beyond")
-      .setStyle("Primary")
-      .setEmoji("🌐");
+        // Pull from the database all of the buttons that the company has to offer
+        // For now we will just create two buttons
+        const button = new ButtonBuilder()
+            .setLabel("Discord & Beyond")
+            .setCustomId("toggleViewRole:1113541353402536088:Discord & Beyond")
+            .setStyle("Primary")
+            .setEmoji("🌐");
 
-    const button2 = new ButtonBuilder()
-      .setLabel("Sound & Color")
-      .setCustomId("toggleViewRole:1115208435336749056:Sound & Color")
-      .setStyle("Primary")
-      .setEmoji("🎨")
+        const button2 = new ButtonBuilder()
+            .setLabel("Sound & Color")
+            .setCustomId("toggleViewRole:1115208435336749056:Sound & Color")
+            .setStyle("Primary")
+            .setEmoji("🎨");
 
-    actionRow.addComponents(button);
-    actionRow.addComponents(button2);
+        actionRow.addComponents(button);
+        actionRow.addComponents(button2);
 
-    // Sending the embed back to the client
-    await interaction.deleteReply();
-    await interaction.channel.send({
-      embeds: [embed],
-      components: [actionRow],
-    });
-  },
+        // Sending the embed back to the client
+        await interaction.deleteReply();
+        await interaction.channel.send({
+            embeds: [embed],
+            components: [actionRow],
+        });
+    },
 };
 
 // ONBOARDING STEPS
@@ -103,37 +103,36 @@ module.exports = {
 
 // // Creating the embed
 // const embed = new EmbedBuilder({
-//   id: 703906876,
-//   title: "View Projects",
-//   description: "Toggle the projects you want to view :arrow_down:",
-//   fields: [],
+//     id: 703906876,
+//     title: "View Projects",
+//     description: "Toggle the projects you want to view :arrow_down:",
+//     fields: [],
 // });
 
 // // Creating an actionRow
 // const actionRow = new ActionRowBuilder();
 // const { buttons } = client;
+
 // // Pull from the database all of the buttons that the company has to offer
 // // For now we will just create two buttons
-
 // const button = new ButtonBuilder()
-//   .setLabel("Discord & Beyond")
-//   .setCustomId("hello")
-//   .setStyle("Primary")
-//   .setEmoji("🌐")
+//     .setLabel("Discord & Beyond")
+//     .setCustomId("toggleViewRole:1113541353402536088:Discord & Beyond")
+//     .setStyle("Primary")
+//     .setEmoji("🌐");
+
+// const button2 = new ButtonBuilder()
+//     .setLabel("Sound & Color")
+//     .setCustomId("toggleViewRole:1115208435336749056:Sound & Color")
+//     .setStyle("Primary")
+//     .setEmoji("🎨");
 
 // actionRow.addComponents(button);
+// actionRow.addComponents(button2);
 
-// buttons.set("hello", {
-//   data: {
-//     name: "hello",
-//   },
-//   async execute(interaction, client) {
-//     interaction.reply("This is the button that is created");
-//   },
-// });
-
+// // Sending the embed back to the client
 // await interaction.deleteReply();
 // await interaction.channel.send({
-//   embeds: [embed],
-//   components: [actionRow],
+//     embeds: [embed],
+//     components: [actionRow],
 // });
