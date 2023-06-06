@@ -1,65 +1,80 @@
 module.exports = {
-  name: "interactionCreate",
-  async execute(interaction, client) {
-    if (interaction.isChatInputCommand()) {
-      const { commands } = client;
-      const { commandName } = interaction;
-      const command = commands.get(commandName);
-      if (!command) return;
+    name: "interactionCreate",
+    async execute(interaction, client) {
 
-      try {
-        await command.execute(interaction, client);
-      } catch (err) {
-        console.log(err);
-        await interaction.reply({
-          content: "something went wrong when executing this command",
-          ephemeral: true,
-        });
-      }
-    } else if (interaction.isButton()) {
-      const { buttons } = client;
-      const { customId } = interaction;
+        /***
+         * Chat "/" Comand
+         */
+        if (interaction.isChatInputCommand()) {
+            const { commands } = client;
+            const { commandName } = interaction;
+            const command = commands.get(commandName);
+            if (!command) return;
 
-      // Handler for the toggle view role embed
-      if (customId.includes("toggleRole")) {
+            try {
+                await command.execute(interaction, client);
+            } catch (err) {
+                console.log(err);
+                await interaction.reply({
+                    content: "something went wrong when executing this command",
+                    ephemeral: true,
+                });
+            }
+        /***
+         * BUTTON CLICK
+         */
+        } else if (interaction.isButton()) {
+            const { buttons } = client;
+            const { customId } = interaction;
 
-        await interaction.deferReply({ ephemeral: true });
+            // Handler for the toggle view role embed
+            if (customId.includes("toggleViewRole"))
+                handleToggleViewRole(interaction, client, customId);
 
-        try {
-          const data = customId.split(":");
-          const roleId = data[1];
-          const projectName = data[2];
+            //Handler for every other button click
+            else {
+                const button = buttons.get(customId);
 
-          // Check to see if they have the role
-          if (
-            interaction.member.roles.cache.some((role) => role.id === roleId)
-          ) {
+                if (!button)
+                    return new Error("there is no code for this button");
+
+                try {
+                    await button.execute(interaction, client);
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+        }
+    },
+};
+
+
+/***
+ * Toggles the specific role for the user who interacted with the button
+ */
+async function handleToggleViewRole(interaction, client, customId) {
+    await interaction.deferReply({ ephemeral: true });
+
+    try {
+        const data = customId.split(":");
+        const roleId = data[1];
+        const projectName = data[2];
+
+        // Check to see if they have the role
+        if (interaction.member.roles.cache.some((role) => role.id === roleId)) {
             // remove the role
             interaction.member.roles.remove(roleId);
             return await interaction.editReply({
-              content: `You are no longer viewing ${projectName}`,
+                content: `You are no longer viewing ${projectName}`,
             });
-          }
-          // add the role
-          interaction.member.roles.add(roleId);
-          return await interaction.editReply({
+        }
+        // add the role
+        interaction.member.roles.add(roleId);
+        return await interaction.editReply({
             content: `You can now view ${projectName}`,
-          });
-        } catch (error) {
-          console.log(error);
-          return await interaction.reply({ content: "Bot currently down" })
-        }
-      } else {
-        const button = buttons.get(customId);
-
-        if (!button) return new Error("there is no code for this button");
-
-        try {
-          await button.execute(interaction, client);
-        } catch (error) {
-          console.error(error);
-        }
-      }
+        });
+    } catch (error) {
+        console.log(error);
+        return await interaction.reply({ content: "Bot currently down" });
     }
-  },
-};
+}

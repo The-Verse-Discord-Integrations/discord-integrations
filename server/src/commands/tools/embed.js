@@ -29,13 +29,13 @@ module.exports = {
 
     const button = new ButtonBuilder()
       .setLabel("Discord & Beyond")
-      .setCustomId("toggleRole:1113541353402536088:Discord & Beyond")
+      .setCustomId("toggleViewRole:1113541353402536088:Discord & Beyond")
       .setStyle("Primary")
       .setEmoji("🌐");
 
     const button2 = new ButtonBuilder()
       .setLabel("Sound & Color")
-      .setCustomId("toggleRole:1115208435336749056:Sound & Color")
+      .setCustomId("toggleViewRole:1115208435336749056:Sound & Color")
       .setStyle("Primary")
       .setEmoji("🎨")
 
