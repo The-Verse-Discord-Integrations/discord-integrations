@@ -24,9 +24,9 @@ module.exports = {
     // Creating an actionRow
     const actionRow = new ActionRowBuilder();
     const { buttons } = client;
+
     // Pull from the database all of the buttons that the company has to offer
     // For now we will just create two buttons
-
     const button = new ButtonBuilder()
       .setLabel("Discord & Beyond")
       .setCustomId("toggleViewRole:1113541353402536088:Discord & Beyond")
@@ -42,6 +42,7 @@ module.exports = {
     actionRow.addComponents(button);
     actionRow.addComponents(button2);
 
+    // Sending the embed back to the client
     await interaction.deleteReply();
     await interaction.channel.send({
       embeds: [embed],
