@@ -30,7 +30,7 @@ module.exports = {
             const { customId } = interaction;
 
             // Handler for the toggle view role embed
-            if (customId.includes("toggleViewRole"))
+            if (customId.slice(0, "toggleViewRole".length) === "toggleViewRole")
                 handleToggleViewRole(interaction, client, customId);
 
             //Handler for every other button click

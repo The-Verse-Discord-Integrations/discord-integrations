@@ -16,11 +16,11 @@ const serverSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  projects: [
+  nodes: [
     // Ref to project type
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Project",
+      ref: "Node",
     },
   ],
   members: [
