@@ -17,6 +17,7 @@ const client = new Client({
 
 client.commands = new Collection();
 client.buttons = new Collection();
+client.modals = new Collection();
 client.commandArray = []
 
 // When a user joins they will be given these two roles

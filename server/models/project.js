@@ -7,7 +7,7 @@ const projectSchema = new mongoose.Schema({
     unique: true,
   },
   description: String,
-  manager: [
+  managers: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Member",
@@ -26,6 +26,22 @@ const projectSchema = new mongoose.Schema({
       ref: "Task",
     },
   ],
+  subProjects: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "subProject",
+    },
+  ],
+  categoryId: {
+    type: String,
+    required: true,
+  },
+  links: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "link"
+    }
+  ]
 });
 
 projectSchema.set("toJSON", {
