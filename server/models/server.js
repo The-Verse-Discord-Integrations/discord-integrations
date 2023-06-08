@@ -10,30 +10,29 @@ const serverSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  description: String,
-  creationDate: new Date("<YYYY-mm-dd>"),
   owner: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Member",
     required: true,
   },
-  nodes: [
+  projects: [
     // Ref to project type
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Node",
+      ref: "Project",
     },
+  ],
+  managers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Member",
+    }
   ],
   members: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Member",
     },
-  ],
-  admins: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Member",
-    }
   ],
   roles: [
     {

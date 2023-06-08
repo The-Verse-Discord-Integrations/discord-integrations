@@ -19,7 +19,6 @@ const projectSchema = new mongoose.Schema({
       ref: "Member",
     },
   ],
-  startDate: new Date("<YYYY-mm-dd>"),
   tasks: [
     {
       type: mongoose.Schema.Types.ObjectId,
