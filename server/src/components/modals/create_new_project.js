@@ -1,5 +1,7 @@
 const Server = require("../../../models/server");
 const Member = require("../../../models/member");
+const Project = require("../../../models/project");
+const { ChannelType } = require("discord.js");
 
 module.exports = {
     data: {
@@ -10,7 +12,8 @@ module.exports = {
 
         // Check to make sure the user has the permission to perform the command
         const guildId = interaction.guild.id;
-        const newNodeName = interaction.fields.getTextInputValue("node_name");
+        const newProjectName =
+            interaction.fields.getTextInputValue("node_name");
         const guildData = await Server.findOne({
             guildId: guildId,
         }).populate({
@@ -18,14 +21,14 @@ module.exports = {
         });
 
         if (!guildData) {
-            return await interaction.editReply("Contact support")
+            return await interaction.editReply("Contact support");
         }
-        
-        const isManager = guildData.managers.some(
+
+        const manager = guildData.managers.find(
             (manager) => manager.discordId === interaction.user.id
         );
 
-        if (!isManager) {
+        if (!manager) {
             console.log("is not manager");
             return await interaction.editReply({
                 content:
@@ -35,10 +38,49 @@ module.exports = {
         }
 
         await interaction.editReply({
-            content: `Building ${newNodeName} node. This may take a few seconds.`,
+            content: `Building ${newProjectName} node. This may take a few seconds.`,
             ephemeral: true,
         });
 
-        // Build new node
+        // Build Node and populate Database
+        await buildProject(interaction, newProjectName);
+        // const category = await interaction.guild.channels.create({
+        //     name: newProjectName,
+        //     type: ChannelType.GuildCategory,
+        // })
+
+        // await interaction.guild.channels.create({
+        //     name: "text-channel",
+        //     type: ChannelType.GuildText,
+        //     parent: category
+        // })
+
+        // // Create new project in the database
+        // let newProject = await Project.create({
+        //     name: newProjectName,
+        //     managers: [manager],
+        //     members: [manager],
+        // })
     },
+};
+
+const buildProject = function (interaction, newProjectName) {
+    return new Promise(async (resolve, reject) => {
+        let category;
+        try {
+            category = await interaction.guild.channels.create({
+                name: newProjectName,
+                type: ChannelType.GuildCategory,
+            });
+            await interaction.guild.channels.create({
+                name: "text-channel",
+                type: ChannelType.GuildText,
+                parent: category,
+            });
+        } catch (error) {
+            // await category.channels.forEach((channel) => channel.delete());
+            // await category.delete();
+            // interaction.editReply("An Error has occured");
+        }
+    });
 };
