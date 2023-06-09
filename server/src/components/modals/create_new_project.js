@@ -10,12 +10,17 @@ module.exports = {
 
         // Check to make sure the user has the permission to perform the command
         const guildId = interaction.guild.id;
-        const newNodeName = interaction.fields.getTextInputValue(
-            "node_name"
-        )
-        const guildData = await Server.findOne({ guildId: guildId }).populate({
+        const newNodeName = interaction.fields.getTextInputValue("node_name");
+        const guildData = await Server.findOne({
+            guildId: guildId,
+        }).populate({
             path: "managers",
         });
+
+        if (!guildData) {
+            return await interaction.editReply("Contact support")
+        }
+        
         const isManager = guildData.managers.some(
             (manager) => manager.discordId === interaction.user.id
         );

@@ -22,8 +22,7 @@ module.exports = {
             .setRequired(true)
             .setStyle(TextInputStyle.Short);
 
-
-        modal.addComponents(new ActionRowBuilder().addComponents(textInput))
+        modal.addComponents(new ActionRowBuilder().addComponents(textInput));
 
         await interaction.showModal(modal);
     },
