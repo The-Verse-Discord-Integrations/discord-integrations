@@ -8,16 +8,17 @@ const {
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName("create_new_project")
-        .setDescription("Creates new project"),
+        .setName("create_new_node")
+        .setDescription("Creates new node"),
     async execute(interaction) {
+        // Send the Modal to get the name of the project that is being created
         const modal = new ModalBuilder()
-            .setCustomId("test-modal")
-            .setTitle("name?");
+            .setCustomId("create_new_node")
+            .setTitle("The Verse Management Tool");
 
         const textInput = new TextInputBuilder()
-            .setCustomId("name")
-            .setLabel("What is your name?")
+            .setCustomId("node_name")
+            .setLabel("What is the name of the new node?")
             .setRequired(true)
             .setStyle(TextInputStyle.Short);
 
