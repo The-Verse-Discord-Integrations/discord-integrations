@@ -9,8 +9,8 @@ module.exports = {
             const ownerId = response.user.id;
             const name = response.user.username;
 
-            let populatedMember = await Member.count({ discordId: ownerId })
-            
+            let populatedMember = await Member.findOne({ discordId: ownerId })
+            console.log(populatedMember)
             if (!populatedMember) {
                 populatedMember = await Member.create({
                     name: name,
