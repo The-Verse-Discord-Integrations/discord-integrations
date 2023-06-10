@@ -10,7 +10,7 @@ module.exports = {
             const name = response.user.username;
 
             let populatedMember = await Member.findOne({ discordId: ownerId })
-            console.log(populatedMember)
+
             if (!populatedMember) {
                 populatedMember = await Member.create({
                     name: name,
@@ -18,8 +18,8 @@ module.exports = {
                 });
             }
 
-            let populatedServer = await Server.findOne({ guildId: guild.id})
-            
+            let populatedServer = await Server.findOne({ guildId: guild.id}).populate({ path: "owner"})
+
             if (!populatedServer) {
                 populatedServer = await Server.create({
                     name: guild.name,
@@ -31,9 +31,9 @@ module.exports = {
 
                 console.log("New server has been created")
             } else {
-                if (ownerId === populatedServer.owner) console.log("server already exists, welcome back")
+                if (ownerId === populatedServer.owner.discordId) console.log("server already exists, welcome back")
                 else {
-                    populatedServer.owner = ownerId;
+                    populatedServer.owner = populatedMember;
                     populatedServer = await populatedServer.save()
                     console.log("Server already exists, server owner has been updated")
                 }
