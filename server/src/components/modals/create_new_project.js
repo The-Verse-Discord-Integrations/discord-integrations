@@ -67,20 +67,26 @@ module.exports = {
 const buildProject = function (interaction, newProjectName) {
     return new Promise(async (resolve, reject) => {
         let category;
+        let channel;
+        let channels = [];
+
         try {
             category = await interaction.guild.channels.create({
                 name: newProjectName,
                 type: ChannelType.GuildCategory,
             });
-            await interaction.guild.channels.create({
+            channels.push(category);
+            channel = await interaction.guild.channels.create({
                 name: "text-channel",
                 type: ChannelType.GuildText,
                 parent: category,
             });
+            channels.push(channel);
         } catch (error) {
-            // await category.channels.forEach((channel) => channel.delete());
-            // await category.delete();
-            // interaction.editReply("An Error has occured");
+            channels.forEach(async (channel) => {
+                await channel.delete();
+            });
+            await interaction.editReply("An Error has occured");
         }
     });
 };
