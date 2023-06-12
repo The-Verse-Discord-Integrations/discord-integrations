@@ -4,15 +4,15 @@ const {
   DISC_TOKEN,
   DISC_CLIENTID,
   DISC_GUILDID,
-} = require("../../../utils/config");
+} = require("../../../../utils/config");
 const fs = require("fs");
 
 module.exports = (client) => {
   client.handleCommands = async () => {
-    const commandFolders = fs.readdirSync("./src/commands");
+    const commandFolders = fs.readdirSync("./src/discordapp/commands");
     for (const folder of commandFolders) {
       const commandFiles = fs
-        .readdirSync(`./src/commands/${folder}`)
+        .readdirSync(`./src/discordapp/commands/${folder}`)
         .filter((file) => file.endsWith(".js"));
       const { commands, commandArray } = client;
       for (const file of commandFiles) {

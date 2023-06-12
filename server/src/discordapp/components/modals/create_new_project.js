@@ -1,6 +1,6 @@
-const Server = require("../../../models/server");
-const Member = require("../../../models/member");
-const Project = require("../../../models/project");
+const Server = require("../../../../models/server");
+const Member = require("../../../../models/member");
+const Project = require("../../../../models/project");
 const { ChannelType } = require("discord.js");
 
 module.exports = {

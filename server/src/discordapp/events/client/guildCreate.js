@@ -1,5 +1,5 @@
-const Server = require("../../../models/server");
-const Member = require("../../../models/member");
+const Server = require("../../../../models/server");
+const Member = require("../../../../models/member");
 
 module.exports = {
     name: "guildCreate",

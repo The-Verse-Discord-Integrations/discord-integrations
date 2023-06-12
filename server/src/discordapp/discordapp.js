@@ -31,10 +31,10 @@ client.commandArray = []
 // })
 
 // We do ./src/functions because readdirSync takes an absolute path relative to the Node.js process. The Node.js process would be the server folder.
-const functionFolders = fs.readdirSync("./src/functions");
+const functionFolders = fs.readdirSync("./src/discordapp/functions");
 for (const folder of functionFolders) {
   const functionFiles = fs
-    .readdirSync(`./src/functions/${folder}`)
+    .readdirSync(`./src/discordapp/functions/${folder}`)
     .filter((file) => file.endsWith(".js"));
   for (const file of functionFiles) {
     require(`./functions/${folder}/${file}`)(client);

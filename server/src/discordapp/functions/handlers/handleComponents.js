@@ -2,10 +2,10 @@ const fs = require("fs");
 
 module.exports = (client) => {
     client.handleComponents = async () => {
-        const componentFolders = fs.readdirSync("./src/components");
+        const componentFolders = fs.readdirSync("./src/discordapp/components");
         for (const folder of componentFolders) {
             const componentFiles = fs
-                .readdirSync(`./src/components/${folder}`)
+                .readdirSync(`./src/discordapp/components/${folder}`)
                 .filter((file) => file.endsWith(".js"));
 
             const { buttons, modals } = client;
