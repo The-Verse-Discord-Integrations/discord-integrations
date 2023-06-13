@@ -30,15 +30,20 @@ onFormSubmitRouter.post("/onBoarding", async (request, response) => {
 
         if (!found) return; // SEND A MESSAGE TO ME OR BEN ABOUT THE FORM NOT BEING SUBMITTED CORRECTLY
     
+        // Check to see if the user already has a profile
+        let member = await Member.findOne({ discordId: discordId})
+
         // Create user profile
-        const member = await Member.create({
-            name: fUsername,
-            discordId: discordId,
-            miro: fMiro,
-            github: fGithub,
-            startDate: fStartDate,
-            endDate: fEndDate,
-        });
+        if (!member) {
+            member = await Member.create({
+                name: fUsername,
+                discordId: discordId,
+                miro: fMiro,
+                github: fGithub,
+                startDate: fStartDate,
+                endDate: fEndDate,
+            });
+        }
         
         const result = await Server.updateOne(
             { guildId: DISC_GUILDID },

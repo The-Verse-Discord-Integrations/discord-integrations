@@ -36,105 +36,92 @@ module.exports = {
                 ephemeral: true,
             });
         }
+
+        // Send Building Embed
         await interaction.editReply({
-            ephemeral: true,
-            embeds: [new EmbedBuilder({
-                id: 734916372,
-                title: `🛠️ Creating New Node...`,
-                description: `Building ${newProjectName}. This may take a few seconds.\n\n🏁▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️🏎️ 💨\n`,
-                fields: [],
-            })],
+            embeds: [
+                new EmbedBuilder({
+                    id: 734916372,
+                    title: `🛠️ Creating New Node...`,
+                    description: `Building ${newProjectName}. This may take a few seconds.\n\n🏁▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️🏎️ 💨\n`,
+                    fields: [],
+                }),
+            ],
         });
 
         // Build Node and populate Database
-        await buildProject(interaction, newProjectName);
-    },
-};
+        let roles = [];
+        let category;
+        let channels = [];
+        try {
+            const newChannels = [
+                {
+                    name: "🌐︱overview",
+                    type: ChannelType.GuildText,
+                },
+                {
+                    name: "📂︱projects",
+                    type: ChannelType.GuildForum,
+                },
+                {
+                    name: "💬︱chat",
+                    type: ChannelType.GuildText,
+                },
+                {
+                    name: "📅︱daily-stand-up",
+                    type: ChannelType.GuildText,
+                },
+                {
+                    name: "🔗︱links",
+                    type: ChannelType.GuildText,
+                },
+                {
+                    name: "❓︱questions-and-answers",
+                    type: ChannelType.GuildText,
+                },
+            ];
 
-const buildProject = async function (interaction, newProjectName) {
-    // const embed = new EmbedBuilder({
-    //     "id": 734916372,
-    //     "title": "🛠️ Creating New Node...",
-    //     "description": "Building new node. This may take a few seconds.\n\n{Progress Bar}\n",
-    //     "fields": []
-    //   })
-    const newRoles = await buildRoles(interaction, newProjectName);
-    await interaction.editReply({
-        ephemeral: true,
-        embeds: [new EmbedBuilder({
-            id: 734916372,
-            title: `🛠️ Creating New Node...`,
-            description: `Building ${newProjectName}. This may take a few seconds.\n\n🏁▪️▪️▪️▪️▪️▪️▪️▪️🏎️ 💨▪️▪️\n`,
-            fields: [],
-        })],
-    });
-    const newChannels = await buildChannels(interaction, newProjectName);
-    await interaction.editReply({
-        ephemeral: true,
-        embeds: [new EmbedBuilder({
-            id: 734916372,
-            title: `🛠️ Creating New Node...`,
-            description: `Building ${newProjectName}. This may take a few seconds.\n\n🏁▪️▪️▪️▪️▪️▪️🏎️ 💨▪️▪️▪️▪️\n`,
-            fields: [],
-        })],
-    });
-};
+            /***
+             * BUILD ROLES
+             */
+            const managerRole = await interaction.guild.roles.create({ name: `${newProjectName} Manager` })
+            const viewingRole = await interaction.guild.roles.create({ name: `${newProjectName} Viewing` })
+            roles.push(managerRole, viewingRole);
 
-const buildRoles = async function (interaction, newProjectName) {};
-const buildChannels = async function (interaction, newProjectName) {
-    let category;
-    let channels = [];
+            /***
+             * BUILDING CATEGORY AND CHANNELS
+             */
+            category = await interaction.guild.channels.create({
+                name: newProjectName,
+                type: ChannelType.GuildCategory,
+            });
+            channels.push(category);
 
-    try {
-        const newChannels = [
-            {
-                name: "🌐︱overview",
-                type: ChannelType.GuildText,
-            },
-            {
-                name: "📂︱projects",
-                type: ChannelType.GuildForum,
-            },
-            {
-                name: "💬︱chat",
-                type: ChannelType.GuildText,
-            },
-            {
-                name: "📅︱daily-stand-up",
-                type: ChannelType.GuildText,
-            },
-            {
-                name: "🔗︱links",
-                type: ChannelType.GuildText,
-            },
-            {
-                name: "❓︱questions-and-answers",
-                type: ChannelType.GuildText,
+            for (const channel of newChannels) {
+                const newChannel = await interaction.guild.channels.create({
+                    name: channel.name,
+                    type: channel.type,
+                    parent: category,
+                });
+                channels.push(newChannel);
             }
-        ];
-        category = await interaction.guild.channels.create({
-            name: newProjectName,
-            type: ChannelType.GuildCategory,
-        });
-        channels.push(category);
-
-        for (const channel of newChannels) {
-            const newChannel = await interaction.guild.channels.create({
-                name: channel.name,
-                type: channel.type,
-                parent: category
-            })
-            channels.push(newChannel);
+            throw "error";
+        } catch (error) {
+            await interaction.editReply({
+                embeds: [
+                    new EmbedBuilder({
+                        title: `❌ERROR OCCURED❌`,
+                        description: "Reverting build\n\nplease contact support",
+                    }),
+                ],
+            });
+            for (const role of roles) {
+                await interaction.guild.roles.delete(role.id);
+            }
+            for (const channel of channels) {
+                await channel.delete()
+            }
+            console.log(error);
         }
-        // throw "error";
-        return channels;
-    } catch (error) {
-        channels.forEach(async (channel) => {
-            await channel.delete();
-        });
-        await interaction.editReply(
-            "An Error has occurred please contact support"
-        );
-        console.log(error);
-    }
+    },
 };
