@@ -1,7 +1,7 @@
 const Server = require("../../../../models/server");
 const Member = require("../../../../models/member");
 const Project = require("../../../../models/project");
-const { ChannelType } = require("discord.js");
+const { ChannelType, EmbedBuilder } = require("discord.js");
 
 module.exports = {
     data: {
@@ -48,76 +48,63 @@ module.exports = {
 };
 
 const buildProject = async function (interaction, newProjectName) {
+    // const embed = new EmbedBuilder({
+    //     "id": 734916372,
+    //     "title": "🛠️ Creating New Node...",
+    //     "description": "Building new node. This may take a few seconds.\n\n{Progress Bar}\n",
+    //     "fields": []
+    //   })
     const newRoles = await buildRoles(interaction, newProjectName);
     const newChannels = await buildChannels(interaction, newProjectName);
     console.log(newChannels);
 };
 
-const buildRoles = async function(interaction, newProjectName) {
-    
-}
+const buildRoles = async function (interaction, newProjectName) {};
 const buildChannels = async function (interaction, newProjectName) {
     let category;
-    let channel;
     let channels = [];
 
     try {
+        const newChannels = [
+            {
+                name: "🌐︱overview",
+                type: ChannelType.GuildText,
+            },
+            {
+                name: "📂︱projects",
+                type: ChannelType.GuildForum,
+            },
+            {
+                name: "💬︱chat",
+                type: ChannelType.GuildText,
+            },
+            {
+                name: "📅︱daily-stand-up",
+                type: ChannelType.GuildText,
+            },
+            {
+                name: "🔗︱links",
+                type: ChannelType.GuildText,
+            },
+            {
+                name: "❓︱questions-and-answers",
+                type: ChannelType.GuildText,
+            }
+        ];
         category = await interaction.guild.channels.create({
             name: newProjectName,
             type: ChannelType.GuildCategory,
         });
         channels.push(category);
 
-        channel = await interaction.guild.channels.create({
-            name: "🌐︱overview",
-            type: ChannelType.GuildText,
-            parent: category,
-        });
-        channels.push(channel);
-        const position = channel.rawPosition + 1;
-        channel = await interaction.guild.channels.create({
-            name: "📂︱projects",
-            type: ChannelType.GuildForum,
-            parent: category,
-        });
-        channels.push(channel);
-
-        channel = await interaction.guild.channels.create({
-            name: "💬︱chat",
-            type: ChannelType.GuildText,
-            parent: category,
-        });
-        channels.push(channel);
-
-        channel = await interaction.guild.channels.create({
-            name: "📅︱daily-stand-up",
-            type: ChannelType.GuildText,
-            parent: category,
-        });
-        channels.push(channel);
-
-        channel = await interaction.guild.channels.create({
-            name: "🔗︱links",
-            type: ChannelType.GuildText,
-            parent: category,
-        });
-        channels.push(channel);
-
-        channel = await interaction.guild.channels.create({
-            name: "❓︱questions-and-answers",
-            type: ChannelType.GuildText,
-            parent: category,
-        });
-        channels.push(channel);
-        const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-        async function myFunction() {
-            await delay(5000); // 20 seconds delay
-            console.log("After 20 seconds");
-            // Write your code here that should run after the delay
+        for (const channel of newChannels) {
+            const newChannel = await interaction.guild.channels.create({
+                name: channel.name,
+                type: channel.type,
+                parent: category
+            })
+            channels.push(newChannel);
         }
-
-        myFunction();
         // throw "error";
         return channels;
     } catch (error) {
