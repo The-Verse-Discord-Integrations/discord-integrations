@@ -88,6 +88,17 @@ module.exports = {
             const viewingRole = await interaction.guild.roles.create({ name: `${newProjectName} Viewing` })
             roles.push(managerRole, viewingRole);
 
+            await interaction.editReply({
+                embeds: [
+                    new EmbedBuilder({
+                        id: 734916372,
+                        title: `🛠️ Creating New Node...`,
+                        description: `Building ${newProjectName}. This may take a few seconds.\n\n🏁▪️▪️▪️▪️▪️▪️▪️▪️🏎️ 💨▪️▪️\n`,
+                        fields: [],
+                    }),
+                ],
+            });
+
             /***
              * BUILDING CATEGORY AND CHANNELS
              */
@@ -105,6 +116,16 @@ module.exports = {
                 });
                 channels.push(newChannel);
             }
+            await interaction.editReply({
+                embeds: [
+                    new EmbedBuilder({
+                        id: 734916372,
+                        title: `🛠️ Creating New Node...`,
+                        description: `Building ${newProjectName}. This may take a few seconds.\n\n🏁▪️▪️▪️▪️▪️▪️🏎️ 💨▪️▪️▪️▪️\n`,
+                        fields: [],
+                    }),
+                ],
+            });
             throw "error";
         } catch (error) {
             await interaction.editReply({
