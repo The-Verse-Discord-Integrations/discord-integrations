@@ -1,7 +1,7 @@
 const Server = require("../../../../models/server");
 const Member = require("../../../../models/member");
 const Project = require("../../../../models/project");
-const { ChannelType } = require("discord.js");
+const { ChannelType, EmbedBuilder } = require("discord.js");
 
 module.exports = {
     data: {
@@ -36,10 +36,14 @@ module.exports = {
                 ephemeral: true,
             });
         }
-
         await interaction.editReply({
-            content: `Building ${newProjectName} node. This may take a few seconds.`,
             ephemeral: true,
+            embeds: [new EmbedBuilder({
+                id: 734916372,
+                title: `🛠️ Creating New Node...`,
+                description: `Building ${newProjectName}. This may take a few seconds.\n\n🏁▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️🏎️ 💨\n`,
+                fields: [],
+            })],
         });
 
         // Build Node and populate Database
@@ -47,15 +51,35 @@ module.exports = {
     },
 };
 
-const buildProject = async function (interaction, newProjectName) {
+const buildProject = async function (
+    interaction,
+    newProjectName,
+    progressBar,
+    message
+) {
     const newRoles = await buildRoles(interaction, newProjectName);
+    await interaction.editReply({
+        ephemeral: true,
+        embeds: [new EmbedBuilder({
+            id: 734916372,
+            title: `🛠️ Creating New Node...`,
+            description: `Building ${newProjectName}. This may take a few seconds.\n\n🏁▪️▪️▪️▪️▪️▪️▪️▪️🏎️ 💨▪️▪️\n`,
+            fields: [],
+        })],
+    });
     const newChannels = await buildChannels(interaction, newProjectName);
-    console.log(newChannels);
+    await interaction.editReply({
+        ephemeral: true,
+        embeds: [new EmbedBuilder({
+            id: 734916372,
+            title: `🛠️ Creating New Node...`,
+            description: `Building ${newProjectName}. This may take a few seconds.\n\n🏁▪️▪️▪️▪️▪️▪️🏎️ 💨▪️▪️▪️▪️\n`,
+            fields: [],
+        })],
+    });
 };
 
-const buildRoles = async function(interaction, newProjectName) {
-    
-}
+const buildRoles = async function (interaction, newProjectName) {};
 const buildChannels = async function (interaction, newProjectName) {
     let category;
     let channel;
@@ -118,7 +142,7 @@ const buildChannels = async function (interaction, newProjectName) {
         }
 
         myFunction();
-        // throw "error";
+        throw "error";
         return channels;
     } catch (error) {
         channels.forEach(async (channel) => {

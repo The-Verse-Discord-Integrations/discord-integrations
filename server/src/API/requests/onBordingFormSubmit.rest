@@ -2,5 +2,16 @@ POST http://localhost:3000/api/formSubmit/onBoarding
 Content-Type: application/json
 
 {
-    
+    "form" : 
+    {
+        "Discord Username - ex: dino1":"bigboii.eth",
+        "Miro Email - ex: johndoe@gmail.com":"awdwad",
+        "GitHub Username - ex: johndoe123":"awdawd",
+        "What role(s) will you be taking in The Verse?":["Web Developer"],
+        "What product(s) will you be working on?":["Discord & Beyond"],
+        "Confirm the number of hours you will be working":"2",
+        "Skills":["Option 1"],
+        "Start Date":"2023-06-12",
+        "End Date":"2023-06-22"
+    }
 }
