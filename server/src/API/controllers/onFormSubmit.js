@@ -51,6 +51,8 @@ onFormSubmitRouter.post("/onBoarding", async (request, response) => {
         );
 
         // SEND MESSAGE TO BEN THAT HE PERSON HAS FINISHED THEIR ONBOARDING
+
+        // Remove the onboarding role
     } catch (error) {
         console.log(error);
     }

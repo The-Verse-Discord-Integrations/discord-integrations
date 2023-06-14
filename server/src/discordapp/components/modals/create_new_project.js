@@ -1,7 +1,7 @@
 const Server = require("../../../../models/server");
 const Member = require("../../../../models/member");
 const Project = require("../../../../models/project");
-const { ChannelType, EmbedBuilder } = require("discord.js");
+const { ChannelType, EmbedBuilder, PermissionsBitField } = require("discord.js");
 
 module.exports = {
     data: {
@@ -113,6 +113,16 @@ module.exports = {
                     name: channel.name,
                     type: channel.type,
                     parent: category,
+                    permissionOverwrites: [
+                        {
+                            id: interaction.guild.roles.everyone,
+                            deny: [PermissionsBitField.Flags.ViewChannel]
+                        },
+                        {
+                            id: roles[1],
+                            allow: [PermissionsBitField.Flags.ViewChannel]
+                        }
+                    ]
                 });
                 channels.push(newChannel);
             }
@@ -126,7 +136,7 @@ module.exports = {
                     }),
                 ],
             });
-            throw "error";
+            // throw "error";
         } catch (error) {
             await interaction.editReply({
                 embeds: [
