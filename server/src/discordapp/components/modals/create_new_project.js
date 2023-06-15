@@ -215,11 +215,27 @@ module.exports = {
                     { name: "viewing", id: roles[2] },
                 ],
             });
+            // Add the Project to the Sever database
+
+            // Add the project to the users project array
+
+            // Send finished embed
+            await interaction.editReply({
+                embeds: [
+                    new EmbedBuilder({
+                        id: 734916372,
+                        title: `✅ New Node Successfully Created ✅`,
+                        description: `${newProjectName} Node has been created\n
+                        Check <#${overviewChannel.id}>`,
+                        fields: [],
+                    }),
+                ],
+            });
         } catch (error) {
             await interaction.editReply({
                 embeds: [
                     new EmbedBuilder({
-                        title: `❌ERROR OCCURED❌`,
+                        title: `❌ ERROR OCCURED ❌`,
                         description:
                             "Reverting build\n\nplease contact support",
                     }),
@@ -258,15 +274,18 @@ const buildRoles = async function (interaction, newProjectName) {
  */
 
 const overviewChannelEmbed = async function (interaction, overviewChannel) {
-    // const embed = new EmbedBuilder({});
+    const embed = new EmbedBuilder({
+        "id": 437590445,
+        "description": "This is an embed!",
+        "fields": []
+      });
 
-    // const actionRow = new ActionRowBuilder();
-    // actionRow.addComponents();
+    const actionRow = new ActionRowBuilder();
 
-    // const newEmbed = await overviewChannel.send({
-    //     embeds: [embed],
-    //     components: [actionRow],
-    // });
+    const newEmbed = await overviewChannel.send({
+        embeds: [embed],
+        // components: [actionRow],
+    });
 
-    // return newEmbed.id;
+    return newEmbed.id;
 };
