@@ -1,3 +1,4 @@
+const { StringSelectMenuBuilder } = require("discord.js");
 const mongoose = require("mongoose");
 
 const projectSchema = new mongoose.Schema({
@@ -7,6 +8,14 @@ const projectSchema = new mongoose.Schema({
         unique: true,
     },
     description: String,
+    dashBoardId: {
+        type: String,
+        required: true
+    },
+    projectsForumId: {
+        type: String,
+        required: true
+    },
     managers: [
         {
             type: mongoose.Schema.Types.ObjectId,
@@ -46,6 +55,12 @@ const projectSchema = new mongoose.Schema({
         type: String
       }
     ],
+    roles: [
+        {
+            name: String,
+            id: String,
+        }
+    ]
 });
 
 projectSchema.set("toJSON", {

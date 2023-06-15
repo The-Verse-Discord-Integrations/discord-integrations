@@ -1,7 +1,11 @@
 const Server = require("../../../../models/server");
 const Member = require("../../../../models/member");
 const Project = require("../../../../models/project");
-const { ChannelType, EmbedBuilder, PermissionsBitField } = require("discord.js");
+const {
+    ChannelType,
+    EmbedBuilder,
+    PermissionsBitField,
+} = require("discord.js");
 
 module.exports = {
     data: {
@@ -50,19 +54,13 @@ module.exports = {
         });
 
         // Build Node and populate Database
-        let roles = [];
+        let roles = await buildRoles(interaction, newProjectName);
         let category;
+        let dashBoardId;
+        let projectsForumId;
         let channels = [];
         try {
             const newChannels = [
-                {
-                    name: "🌐︱overview",
-                    type: ChannelType.GuildText,
-                },
-                {
-                    name: "📂︱projects",
-                    type: ChannelType.GuildForum,
-                },
                 {
                     name: "💬︱chat",
                     type: ChannelType.GuildText,
@@ -80,34 +78,65 @@ module.exports = {
                     type: ChannelType.GuildText,
                 },
             ];
-
-            /***
-             * BUILD ROLES
-             */
-            const managerRole = await interaction.guild.roles.create({ name: `${newProjectName} Manager` })
-            const viewingRole = await interaction.guild.roles.create({ name: `${newProjectName} Viewing` })
-            roles.push(managerRole, viewingRole);
-
-            await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder({
-                        id: 734916372,
-                        title: `🛠️ Creating New Node...`,
-                        description: `Building ${newProjectName}. This may take a few seconds.\n\n🏁▪️▪️▪️▪️▪️▪️▪️▪️🏎️ 💨▪️▪️\n`,
-                        fields: [],
-                    }),
-                ],
-            });
-
             /***
              * BUILDING CATEGORY AND CHANNELS
              */
+
+            // Building the category
             category = await interaction.guild.channels.create({
                 name: newProjectName,
                 type: ChannelType.GuildCategory,
             });
             channels.push(category);
 
+            // Building overview channel and grabbing id
+            const overviewChannel = await interaction.guild.channels.create({
+                name: "🌐︱overview",
+                type: ChannelType.GuildText,
+                parent: category,
+                permissionOverwrites: [
+                    {
+                        id: interaction.guild.roles.everyone,
+                        deny: [
+                            PermissionsBitField.Flags.ViewChannel,
+                            PermissionsBitField.Flags.SendMessages,
+                        ],
+                    },
+                    {
+                        id: roles[1],
+                        allow: [PermissionsBitField.Flags.ViewChannel],
+                    },
+                ],
+            });
+            channels.push(overviewChannel);
+
+            // Send dashboard embed to the overview channel
+            // @params{ interaction, overviewChannel }
+            dashBoardId = await overviewChannelEmbed(interaction, overviewChannel);
+
+            // Building project channel and grabbing id
+            const projectsForum = await interaction.guild.channels.create({
+                name: "📂︱projects",
+                type: ChannelType.GuildForum,
+                parent: category,
+                permissionOverwrites: [
+                    {
+                        id: interaction.guild.roles.everyone,
+                        deny: [
+                            PermissionsBitField.Flags.ViewChannel,
+                            PermissionsBitField.Flags.SendMessages,
+                        ],
+                    },
+                    {
+                        id: roles[1],
+                        allow: [PermissionsBitField.Flags.ViewChannel],
+                    },
+                ],
+            });
+            channels.push(projectsForum)
+            projectsForumId = projectsForum.id
+
+            // Building the rest of the channels
             for (const channel of newChannels) {
                 const newChannel = await interaction.guild.channels.create({
                     name: channel.name,
@@ -116,16 +145,17 @@ module.exports = {
                     permissionOverwrites: [
                         {
                             id: interaction.guild.roles.everyone,
-                            deny: [PermissionsBitField.Flags.ViewChannel]
+                            deny: [PermissionsBitField.Flags.ViewChannel],
                         },
                         {
                             id: roles[1],
-                            allow: [PermissionsBitField.Flags.ViewChannel]
-                        }
-                    ]
+                            allow: [PermissionsBitField.Flags.ViewChannel],
+                        },
+                    ],
                 });
                 channels.push(newChannel);
             }
+
             await interaction.editReply({
                 embeds: [
                     new EmbedBuilder({
@@ -142,7 +172,8 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder({
                         title: `❌ERROR OCCURED❌`,
-                        description: "Reverting build\n\nplease contact support",
+                        description:
+                            "Reverting build\n\nplease contact support",
                     }),
                 ],
             });
@@ -150,9 +181,40 @@ module.exports = {
                 await interaction.guild.roles.delete(role.id);
             }
             for (const channel of channels) {
-                await channel.delete()
+                await channel.delete();
             }
             console.log(error);
         }
     },
 };
+
+/***
+ * Building Roles
+ */
+const buildRoles = async function(interaction, newProjectName) {
+    const managerRole = await interaction.guild.roles.create({
+        name: `${newProjectName} Manager`,
+    });
+    const viewingRole = await interaction.guild.roles.create({
+        name: `${newProjectName} Viewing`,
+    });
+
+    return [managerRole, viewingRole]
+}
+
+/***
+ * Sending Dashboard Embed to overview Channel
+ */
+
+const overviewChannelEmbed = async function(interaction, overviewChannel) {
+    const embed = new EmbedBuilder({})
+
+
+    const actionRow = new ActionRowBuilder();
+    actionRow.addComponents()
+
+    return await overviewChannel.send({
+        embeds: [embed],
+        components: [actionRow],
+    })
+}
