@@ -5,6 +5,7 @@ const {
     ChannelType,
     EmbedBuilder,
     PermissionsBitField,
+    ActionRowBuilder,
 } = require("discord.js");
 
 module.exports = {
@@ -103,7 +104,18 @@ module.exports = {
                         ],
                     },
                     {
+                        id: roles[0],
+                        allow: [
+                            PermissionsBitField.Flags.ViewChannel,
+                            PermissionsBitField.Flags.SendMessages,
+                        ],
+                    },
+                    {
                         id: roles[1],
+                        allow: [PermissionsBitField.Flags.ViewChannel],
+                    },
+                    {
+                        id: roles[2],
                         allow: [PermissionsBitField.Flags.ViewChannel],
                     },
                 ],
@@ -112,7 +124,10 @@ module.exports = {
 
             // Send dashboard embed to the overview channel
             // @params{ interaction, overviewChannel }
-            dashBoardId = await overviewChannelEmbed(interaction, overviewChannel);
+            dashBoardId = await overviewChannelEmbed(
+                interaction,
+                overviewChannel
+            );
 
             // Building project channel and grabbing id
             const projectsForum = await interaction.guild.channels.create({
@@ -128,13 +143,24 @@ module.exports = {
                         ],
                     },
                     {
+                        id: roles[0],
+                        allow: [
+                            PermissionsBitField.Flags.ViewChannel,
+                            PermissionsBitField.Flags.SendMessages,
+                        ],
+                    },
+                    {
                         id: roles[1],
+                        allow: [PermissionsBitField.Flags.ViewChannel],
+                    },
+                    {
+                        id: roles[2],
                         allow: [PermissionsBitField.Flags.ViewChannel],
                     },
                 ],
             });
-            channels.push(projectsForum)
-            projectsForumId = projectsForum.id
+            channels.push(projectsForum);
+            projectsForumId = projectsForum.id;
 
             // Building the rest of the channels
             for (const channel of newChannels) {
@@ -148,7 +174,17 @@ module.exports = {
                             deny: [PermissionsBitField.Flags.ViewChannel],
                         },
                         {
+                            id: roles[0],
+                            allow: [
+                                PermissionsBitField.Flags.ViewChannel,
+                            ],
+                        },
+                        {
                             id: roles[1],
+                            allow: [PermissionsBitField.Flags.ViewChannel],
+                        },
+                        {
+                            id: roles[2],
                             allow: [PermissionsBitField.Flags.ViewChannel],
                         },
                     ],
@@ -166,7 +202,19 @@ module.exports = {
                     }),
                 ],
             });
-            // throw "error";
+            const newProject = await Project.create({
+                name: newProjectName,
+                dashBoardId: dashBoardId,
+                projectsForumId: projectsForumId,
+                managers: [manager],
+                members: [manager],
+                categoryId: category.id,
+                roles: [
+                    { name: "manager", id: roles[0] },
+                    { name: "creator", id: roles[1] },
+                    { name: "viewing", id: roles[2] },
+                ],
+            });
         } catch (error) {
             await interaction.editReply({
                 embeds: [
@@ -191,30 +239,34 @@ module.exports = {
 /***
  * Building Roles
  */
-const buildRoles = async function(interaction, newProjectName) {
+const buildRoles = async function (interaction, newProjectName) {
     const managerRole = await interaction.guild.roles.create({
         name: `${newProjectName} Manager`,
+    });
+    const creatorRole = await interaction.guild.roles.create({
+        name: `${newProjectName} Creator`,
     });
     const viewingRole = await interaction.guild.roles.create({
         name: `${newProjectName} Viewing`,
     });
 
-    return [managerRole, viewingRole]
-}
+    return [managerRole, creatorRole, viewingRole];
+};
 
 /***
  * Sending Dashboard Embed to overview Channel
  */
 
-const overviewChannelEmbed = async function(interaction, overviewChannel) {
-    const embed = new EmbedBuilder({})
+const overviewChannelEmbed = async function (interaction, overviewChannel) {
+    // const embed = new EmbedBuilder({});
 
+    // const actionRow = new ActionRowBuilder();
+    // actionRow.addComponents();
 
-    const actionRow = new ActionRowBuilder();
-    actionRow.addComponents()
+    // const newEmbed = await overviewChannel.send({
+    //     embeds: [embed],
+    //     components: [actionRow],
+    // });
 
-    return await overviewChannel.send({
-        embeds: [embed],
-        components: [actionRow],
-    })
-}
+    // return newEmbed.id;
+};
