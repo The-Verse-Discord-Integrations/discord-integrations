@@ -4,7 +4,7 @@ Content-Type: application/json
 {
     "form" : 
     {
-        "Discord Username - ex: dino1":"dino1",
+        "Discord Username - ex: dino1":"dino21",
         "Miro Email - ex: johndoe@gmail.com":"awdwad",
         "GitHub Username - ex: johndoe123":"awdawd",
         "What role(s) will you be taking in The Verse?":["Web Developer"],

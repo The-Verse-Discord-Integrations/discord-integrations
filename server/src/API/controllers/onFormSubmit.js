@@ -5,6 +5,8 @@ const Server = require("../../../models/server");
 const { DISC_GUILDID } = require("../../../utils/config");
 const { EmbedBuilder } = require("discord.js");
 
+const dinoId = '203237501832265730';
+
 onFormSubmitRouter.post("/onBoarding", async (request, response) => {
     try {
         const formAnswers = Object.values(request.body.form);
@@ -29,7 +31,15 @@ onFormSubmitRouter.post("/onBoarding", async (request, response) => {
             }
         });
 
-        if (!found) return; // SEND A MESSAGE TO ME OR BEN ABOUT THE FORM NOT BEING SUBMITTED CORRECTLY
+        if (!found) {
+            return await client.users.cache.get(dinoId).send({
+                embeds: [new EmbedBuilder({
+                    "id": 437590445,
+                    "description": `__name of person__ inputed the username: ${fUsername}, It was not found in the server`,
+                    "fields": []
+                  })],
+            });
+        }; 
 
         // Check to see if the user already has a profile
         let member = await Member.findOne({ discordId: discordId });
@@ -51,7 +61,7 @@ onFormSubmitRouter.post("/onBoarding", async (request, response) => {
         //     { $addToSet: { members: member } }
         // );
 
-        // SEND MESSAGE TO BEN THAT HE PERSON HAS FINISHED THEIR ONBOARDING
+        // SEND MESSAGE TO BEN THAT THE PERSON HAS FINISHED THEIR ONBOARDING
 
         // Send a message to the user in discord that their onboarding is complete.
         await client.users.cache.get(discordId).send({
