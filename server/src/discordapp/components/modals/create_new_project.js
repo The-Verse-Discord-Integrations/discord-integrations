@@ -50,6 +50,7 @@ module.exports = {
                     title: `🛠️ Creating New Node...`,
                     description: `Building ${newProjectName}. This may take a few seconds.\n\n🏁▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️🏎️ 💨\n`,
                     fields: [],
+                    color: 32255
                 }),
             ],
         });
@@ -199,6 +200,7 @@ module.exports = {
                         title: `🛠️ Creating New Node...`,
                         description: `Building ${newProjectName}. This may take a few seconds.\n\n🏁▪️▪️▪️▪️▪️▪️🏎️ 💨▪️▪️▪️▪️\n`,
                         fields: [],
+                        color: 32255
                     }),
                 ],
             });
@@ -210,9 +212,9 @@ module.exports = {
                 members: [manager],
                 categoryId: category.id,
                 roles: [
-                    { name: "manager", id: roles[0] },
-                    { name: "creator", id: roles[1] },
-                    { name: "viewing", id: roles[2] },
+                    { name: "manager", id: roles[0].id },
+                    { name: "creator", id: roles[1].id },
+                    { name: "viewing", id: roles[2].id },
                 ],
             });
             // Add the Project to the Sever database
@@ -228,6 +230,7 @@ module.exports = {
                         description: `${newProjectName} Node has been created\n
                         Check <#${overviewChannel.id}>`,
                         fields: [],
+                        color: 65283
                     }),
                 ],
             });
@@ -238,6 +241,7 @@ module.exports = {
                         title: `❌ ERROR OCCURED ❌`,
                         description:
                             "Reverting build\n\nplease contact support",
+                        color: 16711680
                     }),
                 ],
             });

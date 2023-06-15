@@ -10,13 +10,14 @@ const dinoId = '203237501832265730';
 onFormSubmitRouter.post("/onBoarding", async (request, response) => {
     try {
         const formAnswers = Object.values(request.body.form);
-        const fUsername = formAnswers[0];
-        const fMiro = formAnswers[1];
-        const fGithub = formAnswers[2];
-        const fRoles = formAnswers[3];
-        const fSkills = formAnswers[6];
-        const fStartDate = formAnswers[7];
-        const fEndDate = formAnswers[8];
+        const fName = formAnswers[0]
+        const fUsername = formAnswers[1];
+        const fMiro = formAnswers[2];
+        const fGithub = formAnswers[3];
+        const fRoles = formAnswers[4];
+        const fSkills = formAnswers[9];
+        const fStartDate = formAnswers[10];
+        const fEndDate = formAnswers[11];
 
         // Check to make sure the discord user is correct in the server
         const guildMembers = await client.guilds.cache
@@ -71,6 +72,7 @@ onFormSubmitRouter.post("/onBoarding", async (request, response) => {
                 "fields": []
               })],
         });
+
         // Remove the onboarding role
     } catch (error) {
         console.log(error);

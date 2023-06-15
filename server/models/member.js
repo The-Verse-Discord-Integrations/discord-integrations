@@ -30,6 +30,11 @@ const memberSchema = new mongoose.Schema({
         type: String
       }
     ],
+    acheivements : [
+      {
+        type: String
+      }
+    ]
 });
 
 memberSchema.set("toJSON", {
