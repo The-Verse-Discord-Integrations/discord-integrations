@@ -50,10 +50,12 @@ module.exports = {
                     title: `🛠️ Creating New Node...`,
                     description: `Building ${newProjectName}. This may take a few seconds.\n\n🏁▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️🏎️ 💨\n`,
                     fields: [],
-                    color: 32255
+                    color: 32255,
                 }),
             ],
         });
+
+        console.log(manager);
 
         // Build Node and populate Database
         let roles = await buildRoles(interaction, newProjectName);
@@ -176,9 +178,7 @@ module.exports = {
                         },
                         {
                             id: roles[0],
-                            allow: [
-                                PermissionsBitField.Flags.ViewChannel,
-                            ],
+                            allow: [PermissionsBitField.Flags.ViewChannel],
                         },
                         {
                             id: roles[1],
@@ -200,10 +200,12 @@ module.exports = {
                         title: `🛠️ Creating New Node...`,
                         description: `Building ${newProjectName}. This may take a few seconds.\n\n🏁▪️▪️▪️▪️▪️▪️🏎️ 💨▪️▪️▪️▪️\n`,
                         fields: [],
-                        color: 32255
+                        color: 32255,
                     }),
                 ],
             });
+
+            // CREATING THE NEW PROJECT IN MONGODB
             const newProject = await Project.create({
                 name: newProjectName,
                 dashBoardId: dashBoardId,
@@ -220,7 +222,10 @@ module.exports = {
             // Add the Project to the Sever database
 
             // Add the project to the users project array
-
+            Member.updateOne(
+                { _id: manager._id },
+                { push: { projects: newProject } }
+            );
             // Send finished embed
             await interaction.editReply({
                 embeds: [
@@ -230,10 +235,11 @@ module.exports = {
                         description: `${newProjectName} Node has been created\n
                         Check <#${overviewChannel.id}>`,
                         fields: [],
-                        color: 65283
+                        color: 65283,
                     }),
                 ],
             });
+
         } catch (error) {
             await interaction.editReply({
                 embeds: [
@@ -241,7 +247,7 @@ module.exports = {
                         title: `❌ ERROR OCCURED ❌`,
                         description:
                             "Reverting build\n\nplease contact support",
-                        color: 16711680
+                        color: 16711680,
                     }),
                 ],
             });
@@ -279,10 +285,10 @@ const buildRoles = async function (interaction, newProjectName) {
 
 const overviewChannelEmbed = async function (interaction, overviewChannel) {
     const embed = new EmbedBuilder({
-        "id": 437590445,
-        "description": "This is an embed!",
-        "fields": []
-      });
+        id: 437590445,
+        description: "This is an embed!",
+        fields: [],
+    });
 
     const actionRow = new ActionRowBuilder();
 

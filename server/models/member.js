@@ -5,6 +5,10 @@ const memberSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    discordUsername: {
+        type: String,
+        required: true,
+    },
     discordId: {
         type: String,
         required: true,
@@ -17,24 +21,29 @@ const memberSchema = new mongoose.Schema({
         },
     ],
     skills: [
-      {
-        type: String
-      }
+        {
+            type: String,
+        },
     ],
     miro: String,
     github: String,
     startDate: Date,
     endDate: Date,
     roles: [
-      {
-        type: String
-      }
+        {
+            type: String,
+        },
     ],
-    acheivements : [
-      {
-        type: String
-      }
-    ]
+    achievements: [
+        {
+            type: String,
+        },
+    ],
+    goals: [
+        {
+            type: String,
+        },
+    ],
 });
 
 memberSchema.set("toJSON", {
