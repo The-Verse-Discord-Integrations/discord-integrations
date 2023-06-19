@@ -260,15 +260,15 @@ module.exports = {
             for (const channel of channels) {
                 await channel.delete();
             }
-            await Project.deleteOne({ name: newProject.name });
-            await Member.updateMany(
-                {},
-                { $pull: { projects: newProject._id } }
-            );
-            await Server.updateMany(
-                {},
-                { $pull: { projects: newProject._id } }
-            );
+            // await Project.deleteOne({ name: newProject.name });
+            // await Member.updateMany(
+            //     {},
+            //     { $pull: { projects: newProject._id } }
+            // );
+            // await Server.updateMany(
+            //     {},
+            //     { $pull: { projects: newProject._id } }
+            // );
             console.log(error);
         }
     },
