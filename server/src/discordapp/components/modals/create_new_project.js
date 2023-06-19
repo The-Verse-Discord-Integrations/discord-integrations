@@ -43,19 +43,7 @@ module.exports = {
         }
 
         // Send Building Embed
-        await interaction.editReply({
-            embeds: [
-                new EmbedBuilder({
-                    id: 734916372,
-                    title: `🛠️ Creating New Node...`,
-                    description: `Building ${newProjectName}. This may take a few seconds.\n\n🏁▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️🏎️ 💨\n`,
-                    fields: [],
-                    color: 32255,
-                }),
-            ],
-        });
-
-        console.log(manager);
+        sendBuildingEmbed(interaction, newProjectName, '▪️▪️▪️▪️▪️▪️▪️▪️▪️🏎️ 💨')
 
         // Build Node and populate Database
         let roles = await buildRoles(interaction, newProjectName);
@@ -63,6 +51,7 @@ module.exports = {
         let dashBoardId;
         let projectsForumId;
         let channels = [];
+        let newProject;
         try {
             const newChannels = [
                 {
@@ -82,6 +71,7 @@ module.exports = {
                     type: ChannelType.GuildText,
                 },
             ];
+
             /***
              * BUILDING CATEGORY AND CHANNELS
              */
@@ -92,6 +82,8 @@ module.exports = {
                 type: ChannelType.GuildCategory,
             });
             channels.push(category);
+
+            sendBuildingEmbed(interaction, newProjectName, '▪️▪️▪️▪️▪️▪️▪️▪️🏎️ 💨▪️')
 
             // Building overview channel and grabbing id
             const overviewChannel = await interaction.guild.channels.create({
@@ -125,12 +117,16 @@ module.exports = {
             });
             channels.push(overviewChannel);
 
+            sendBuildingEmbed(interaction, newProjectName, '▪️▪️▪️▪️▪️▪️▪️🏎️ 💨▪️▪️')
+
             // Send dashboard embed to the overview channel
             // @params{ interaction, overviewChannel }
             dashBoardId = await overviewChannelEmbed(
                 interaction,
                 overviewChannel
             );
+
+            sendBuildingEmbed(interaction, newProjectName, '▪️▪️▪️▪️▪️▪️🏎️ 💨▪️▪️▪️')
 
             // Building project channel and grabbing id
             const projectsForum = await interaction.guild.channels.create({
@@ -165,6 +161,8 @@ module.exports = {
             channels.push(projectsForum);
             projectsForumId = projectsForum.id;
 
+            sendBuildingEmbed(interaction, newProjectName, '▪️▪️▪️▪️▪️🏎️ 💨▪️▪️▪️▪️')
+
             // Building the rest of the channels
             for (const channel of newChannels) {
                 const newChannel = await interaction.guild.channels.create({
@@ -193,20 +191,12 @@ module.exports = {
                 channels.push(newChannel);
             }
 
-            await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder({
-                        id: 734916372,
-                        title: `🛠️ Creating New Node...`,
-                        description: `Building ${newProjectName}. This may take a few seconds.\n\n🏁▪️▪️▪️▪️▪️▪️🏎️ 💨▪️▪️▪️▪️\n`,
-                        fields: [],
-                        color: 32255,
-                    }),
-                ],
-            });
+            sendBuildingEmbed(interaction, newProjectName, '▪️▪️▪️▪️🏎️ 💨▪️▪️▪️▪️▪️')
 
-            // CREATING THE NEW PROJECT IN MONGODB
-            const newProject = await Project.create({
+            /**
+             * MONGODB INTERACTIONS
+             */
+            newProject = await Project.create({
                 name: newProjectName,
                 dashBoardId: dashBoardId,
                 projectsForumId: projectsForumId,
@@ -219,13 +209,27 @@ module.exports = {
                     { name: "viewing", id: roles[2].id },
                 ],
             });
-            // Add the Project to the Sever database
 
-            // Add the project to the users project array
-            Member.updateOne(
-                { _id: manager._id },
-                { push: { projects: newProject } }
+            sendBuildingEmbed(interaction, newProjectName, '▪️▪️▪️🏎️ 💨▪️▪️▪️▪️▪️▪️')
+
+            await Member.updateOne(
+                { discordId: manager.discordId },
+                { $push: { projects: newProject } }
             );
+
+            sendBuildingEmbed(interaction, newProjectName, '▪️▪️🏎️ 💨▪️▪️▪️▪️▪️▪️▪️')
+
+            // Add the Project to the Sever database
+            await Server.updateOne(
+                {
+                    guildId: guildId,
+                },
+                {
+                    $push: { projects: newProject },
+                }
+            );
+
+            sendBuildingEmbed(interaction, newProjectName, '▪️🏎️ 💨▪️▪️▪️▪️▪️▪️▪️▪️')
             // Send finished embed
             await interaction.editReply({
                 embeds: [
@@ -239,7 +243,6 @@ module.exports = {
                     }),
                 ],
             });
-
         } catch (error) {
             await interaction.editReply({
                 embeds: [
@@ -257,6 +260,15 @@ module.exports = {
             for (const channel of channels) {
                 await channel.delete();
             }
+            await Project.deleteOne({ name: newProject.name });
+            await Member.updateMany(
+                {},
+                { $pull: { projects: newProject._id } }
+            );
+            await Server.updateMany(
+                {},
+                { $pull: { projects: newProject._id } }
+            );
             console.log(error);
         }
     },
@@ -299,3 +311,17 @@ const overviewChannelEmbed = async function (interaction, overviewChannel) {
 
     return newEmbed.id;
 };
+
+const sendBuildingEmbed = function(interaction, newProjectName, progressText) {
+    return interaction.editReply({
+        embeds: [
+            new EmbedBuilder({
+                id: 734916372,
+                title: `🛠️ Creating New Node...`,
+                description: `Building ${newProjectName}. This may take a few seconds.\n\n🏁${progressText}\n`,
+                fields: [],
+                color: 32255,
+            }),
+        ],
+    });
+}
