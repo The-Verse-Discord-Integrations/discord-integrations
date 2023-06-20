@@ -64,10 +64,10 @@ onFormSubmitRouter.post("/onBoarding", async (request, response) => {
             });
         }
 
-        // const result = await Server.updateOne(
-        //     { guildId: DISC_GUILDID },
-        //     { $addToSet: { members: member } }
-        // );
+        const result = await Server.updateOne(
+            { guildId: DISC_GUILDID },
+            { $addToSet: { members: member } }
+        );
 
         // SEND MESSAGE TO BEN THAT THE PERSON HAS FINISHED THEIR ONBOARDING
 
