@@ -15,6 +15,10 @@ const serverSchema = new mongoose.Schema({
     ref: "Member",
     required: true,
   },
+  viewProjectsEmbed: {
+    channelId: String,
+    embedId: String,
+  },
   projects: [
     // Ref to project type
     {

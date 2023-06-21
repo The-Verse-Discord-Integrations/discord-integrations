@@ -1,7 +1,7 @@
 const Server = require("../../../../models/server");
 const Member = require("../../../../models/member");
 const Project = require("../../../../models/project");
-const { ChannelType, EmbedBuilder, PermissionsBitField, ActionRowBuilder } = require("discord.js");
+const { ChannelType, EmbedBuilder, PermissionsBitField, ActionRowBuilder, ButtonBuilder } = require("discord.js");
 
 module.exports = {
     data: {
@@ -13,12 +13,11 @@ module.exports = {
         // Check to make sure the user has the permission to perform the command
         const guildId = interaction.guild.id;
         const newProjectName = interaction.fields.getTextInputValue("node_name");
-        const guildData = await Server.findOne({ guildId: guildId, }).populate({ path: "managers" });
+        const server = await Server.findOne({ guildId: guildId, }).populate({ path: "managers" }).populate({ path: "projects" })
 
-        if (!guildData) return await interaction.editReply("Contact support");
+        if (!server) return await interaction.editReply("Contact support");
 
-        const manager = guildData.managers.find((manager) => manager.discordId === interaction.user.id);
-
+        const manager = server.managers.find((manager) => manager.discordId === interaction.user.id);
         if (!manager) {
             console.log("is not manager");
             return await interaction.editReply({
@@ -183,17 +182,52 @@ module.exports = {
             sendBuildingEmbed(interaction, newProjectName, "▪️▪️▪️🏎️ 💨▪️▪️▪️▪️▪️▪️");
 
             // Adding the project to the users profile project array
-            await Member.updateOne({ discordId: manager.discordId }, { $push: { projects: newProject } });
+            // await Member.updateOne({ discordId: manager.discordId }, { $push: { projects: newProject } });
+            manager.projects.push(newProject)
+            await manager.save()
 
             sendBuildingEmbed(interaction, newProjectName, "▪️▪️🏎️ 💨▪️▪️▪️▪️▪️▪️▪️");
 
             // Add the Project to the Sever database
-            await Server.updateOne({ guildId: guildId }, { $push: { projects: newProject } });
-
+            // const server = await Server.updateOne({ guildId: guildId }, { $push: { projects: newProject } });
+            server.projects.push(newProject)
+            await server.save()
+            
             sendBuildingEmbed(interaction, newProjectName, "▪️🏎️ 💨▪️▪️▪️▪️▪️▪️▪️▪️");
 
-            // Give the user of this command the manager role
+            // Give the user the manager role
             interaction.member.roles.add(roles[0].id);
+            
+            // Update view node embed
+            const viewNodeEmbedChannel = await interaction.client.channels.fetch(server.viewProjectsEmbed.channelId)
+            const viewNodeEmbedMessage = await viewNodeEmbedChannel.messages.fetch(server.viewProjectsEmbed.embedId)
+
+            // Creating the embed
+            const embed = new EmbedBuilder({
+                id: 703906876,
+                title: "View Nodes",
+                description: "Toggle the nodes you want to view :arrow_down:",
+                fields: [],
+                thumbnail: {
+                    url: "https://media.licdn.com/dms/image/C560BAQGZsRf5Ro6Zbg/company-logo_200_200/0/1631752036761?e=2147483647&v=beta&t=kVWNkg1BQJDVWm4UhD8L8OmOLxhx_xc2Kc_-V_hC7DQ",
+                },
+            });
+
+            // Creating an actionRow
+            const actionRow = new ActionRowBuilder();
+            for (const project of server.projects) {
+                const button = new ButtonBuilder()
+                    .setLabel(project.name)
+                    .setCustomId(`toggleViewRole:${project.roles[2].id}:${project.name}`)
+                    .setStyle("Primary")
+
+                actionRow.addComponents(button);
+            }
+            // Editing the existing embed
+            viewNodeEmbedMessage.edit({
+                embeds: [embed],
+                components: [actionRow]
+            })
 
             // Send finished embed
             await interaction.editReply({
