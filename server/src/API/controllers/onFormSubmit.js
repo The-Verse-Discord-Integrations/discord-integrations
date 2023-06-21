@@ -9,7 +9,7 @@ const dinoId = "203237501832265730";
 
 onFormSubmitRouter.post("/onBoarding", async (request, response) => {
     try {
-        const formAnswers = Object.values(request.body.form);
+        const formAnswers = Object.values(request.body);
         const fName = formAnswers[0];
         const fUsername = formAnswers[1];
         const fMiro = formAnswers[2];
@@ -38,7 +38,7 @@ onFormSubmitRouter.post("/onBoarding", async (request, response) => {
                 embeds: [
                     new EmbedBuilder({
                         id: 437590445,
-                        description: `__name of person__ inputed the username: ${fUsername}, It was not found in the server`,
+                        description: `${fName} inputed the username: ${fUsername}, It was not found in the server`,
                         fields: [],
                     }),
                 ],

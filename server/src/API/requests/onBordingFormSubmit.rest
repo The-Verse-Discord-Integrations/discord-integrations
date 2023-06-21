@@ -2,6 +2,25 @@ POST http://localhost:3000/api/formSubmit/onBoarding
 Content-Type: application/json
 
 {
-    "form" :
-    {"Full Name":"Brandon Cloutier","Discord Username - ex: JohnDoe123 (Case Sensative)":"dino1","Miro Email - ex: johndoe@gmail.com":"johndoe@gmail.com","GitHub Username - ex: johndoe123":"johndoe123","What role(s) will you be taking in The Verse?":["Web Developer","Game Developer","Sound Engineer"],"What product(s) will you be working on?":["Sound & Color","WalkXR","WEB3"],"Skills":["Option 1"],"What are you hoping to learn during this internship at The Verse?":"things","Goal 1:":"thing 1","Goal 2:":"thing 2","Goal 3:":"thing 3","Confirm the number of hours you will be working":"40","Start Date":"2023-06-16","End Date":"2023-06-30","Any other questions or comments":""}
+  "Full Name": "dingo",
+  "Discord Username - ex: JohnDoe123 (Case Sensative)": "dingo",
+  "Miro Email - ex: johndoe@gmail.com": "dinog",
+  "GitHub Username - ex: johndoe123": "indog",
+  "What role(s) will you be taking in The Verse?": [
+    "Web Developer"
+  ],
+  "What product(s) will you be working on?": [
+    "WalkXR"
+  ],
+  "Skills": [
+    "Option 1"
+  ],
+  "What are you hoping to learn during this internship at The Verse?": "dingo",
+  "Goal 1:": "dingo",
+  "Goal 2:": "dingo",
+  "Goal 3:": "dingo",
+  "Confirm the number of hours you will be working": "40",
+  "Start Date": "2023-06-21",
+  "End Date": "2023-06-28",
+  "Any other questions or comments": "dingo\n"
 }

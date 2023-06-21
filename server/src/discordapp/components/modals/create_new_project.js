@@ -1,12 +1,7 @@
 const Server = require("../../../../models/server");
 const Member = require("../../../../models/member");
 const Project = require("../../../../models/project");
-const {
-    ChannelType,
-    EmbedBuilder,
-    PermissionsBitField,
-    ActionRowBuilder,
-} = require("discord.js");
+const { ChannelType, EmbedBuilder, PermissionsBitField, ActionRowBuilder } = require("discord.js");
 
 module.exports = {
     data: {
@@ -17,39 +12,28 @@ module.exports = {
 
         // Check to make sure the user has the permission to perform the command
         const guildId = interaction.guild.id;
-        const newProjectName =
-            interaction.fields.getTextInputValue("node_name");
-        const guildData = await Server.findOne({
-            guildId: guildId,
-        }).populate({
-            path: "managers",
-        });
+        const newProjectName = interaction.fields.getTextInputValue("node_name");
+        const guildData = await Server.findOne({ guildId: guildId, }).populate({ path: "managers" });
 
-        if (!guildData) {
-            return await interaction.editReply("Contact support");
-        }
+        if (!guildData) return await interaction.editReply("Contact support");
 
-        const manager = guildData.managers.find(
-            (manager) => manager.discordId === interaction.user.id
-        );
+        const manager = guildData.managers.find((manager) => manager.discordId === interaction.user.id);
 
         if (!manager) {
             console.log("is not manager");
             return await interaction.editReply({
-                content:
-                    "You do not have the permission to perform this command",
+                content: "You do not have the permission to perform this command",
                 ephemeral: true,
             });
         }
 
         // Send Building Embed
-        sendBuildingEmbed(interaction, newProjectName, '▪️▪️▪️▪️▪️▪️▪️▪️▪️🏎️ 💨')
+        sendBuildingEmbed(interaction, newProjectName, "▪️▪️▪️▪️▪️▪️▪️▪️▪️🏎️ 💨");
 
         // Build Node and populate Database
         let roles = await buildRoles(interaction, newProjectName);
         let category;
         let dashBoardId;
-        let projectsForumId;
         let channels = [];
         let newProject;
         try {
@@ -83,7 +67,7 @@ module.exports = {
             });
             channels.push(category);
 
-            sendBuildingEmbed(interaction, newProjectName, '▪️▪️▪️▪️▪️▪️▪️▪️🏎️ 💨▪️')
+            sendBuildingEmbed(interaction, newProjectName, "▪️▪️▪️▪️▪️▪️▪️▪️🏎️ 💨▪️");
 
             // Building overview channel and grabbing id
             const overviewChannel = await interaction.guild.channels.create({
@@ -93,17 +77,11 @@ module.exports = {
                 permissionOverwrites: [
                     {
                         id: interaction.guild.roles.everyone,
-                        deny: [
-                            PermissionsBitField.Flags.ViewChannel,
-                            PermissionsBitField.Flags.SendMessages,
-                        ],
+                        deny: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages],
                     },
                     {
                         id: roles[0],
-                        allow: [
-                            PermissionsBitField.Flags.ViewChannel,
-                            PermissionsBitField.Flags.SendMessages,
-                        ],
+                        allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages],
                     },
                     {
                         id: roles[1],
@@ -117,16 +95,13 @@ module.exports = {
             });
             channels.push(overviewChannel);
 
-            sendBuildingEmbed(interaction, newProjectName, '▪️▪️▪️▪️▪️▪️▪️🏎️ 💨▪️▪️')
+            sendBuildingEmbed(interaction, newProjectName, "▪️▪️▪️▪️▪️▪️▪️🏎️ 💨▪️▪️");
 
             // Send dashboard embed to the overview channel
             // @params{ interaction, overviewChannel }
-            dashBoardId = await overviewChannelEmbed(
-                interaction,
-                overviewChannel
-            );
+            dashBoardId = await overviewChannelEmbed(interaction, overviewChannel);
 
-            sendBuildingEmbed(interaction, newProjectName, '▪️▪️▪️▪️▪️▪️🏎️ 💨▪️▪️▪️')
+            sendBuildingEmbed(interaction, newProjectName, "▪️▪️▪️▪️▪️▪️🏎️ 💨▪️▪️▪️");
 
             // Building project channel and grabbing id
             const projectsForum = await interaction.guild.channels.create({
@@ -136,17 +111,11 @@ module.exports = {
                 permissionOverwrites: [
                     {
                         id: interaction.guild.roles.everyone,
-                        deny: [
-                            PermissionsBitField.Flags.ViewChannel,
-                            PermissionsBitField.Flags.SendMessages,
-                        ],
+                        deny: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages],
                     },
                     {
                         id: roles[0],
-                        allow: [
-                            PermissionsBitField.Flags.ViewChannel,
-                            PermissionsBitField.Flags.SendMessages,
-                        ],
+                        allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages],
                     },
                     {
                         id: roles[1],
@@ -159,9 +128,8 @@ module.exports = {
                 ],
             });
             channels.push(projectsForum);
-            projectsForumId = projectsForum.id;
 
-            sendBuildingEmbed(interaction, newProjectName, '▪️▪️▪️▪️▪️🏎️ 💨▪️▪️▪️▪️')
+            sendBuildingEmbed(interaction, newProjectName, "▪️▪️▪️▪️▪️🏎️ 💨▪️▪️▪️▪️");
 
             // Building the rest of the channels
             for (const channel of newChannels) {
@@ -191,15 +159,17 @@ module.exports = {
                 channels.push(newChannel);
             }
 
-            sendBuildingEmbed(interaction, newProjectName, '▪️▪️▪️▪️🏎️ 💨▪️▪️▪️▪️▪️')
+            sendBuildingEmbed(interaction, newProjectName, "▪️▪️▪️▪️🏎️ 💨▪️▪️▪️▪️▪️");
 
             /**
              * MONGODB INTERACTIONS
              */
+
+            // Creating new project profile in the database
             newProject = await Project.create({
                 name: newProjectName,
                 dashBoardId: dashBoardId,
-                projectsForumId: projectsForumId,
+                projectsForumId: projectsForum.id,
                 managers: [manager],
                 members: [manager],
                 categoryId: category.id,
@@ -210,26 +180,21 @@ module.exports = {
                 ],
             });
 
-            sendBuildingEmbed(interaction, newProjectName, '▪️▪️▪️🏎️ 💨▪️▪️▪️▪️▪️▪️')
+            sendBuildingEmbed(interaction, newProjectName, "▪️▪️▪️🏎️ 💨▪️▪️▪️▪️▪️▪️");
 
-            await Member.updateOne(
-                { discordId: manager.discordId },
-                { $push: { projects: newProject } }
-            );
+            // Adding the project to the users profile project array
+            await Member.updateOne({ discordId: manager.discordId }, { $push: { projects: newProject } });
 
-            sendBuildingEmbed(interaction, newProjectName, '▪️▪️🏎️ 💨▪️▪️▪️▪️▪️▪️▪️')
+            sendBuildingEmbed(interaction, newProjectName, "▪️▪️🏎️ 💨▪️▪️▪️▪️▪️▪️▪️");
 
             // Add the Project to the Sever database
-            await Server.updateOne(
-                {
-                    guildId: guildId,
-                },
-                {
-                    $push: { projects: newProject },
-                }
-            );
+            await Server.updateOne({ guildId: guildId }, { $push: { projects: newProject } });
 
-            sendBuildingEmbed(interaction, newProjectName, '▪️🏎️ 💨▪️▪️▪️▪️▪️▪️▪️▪️')
+            sendBuildingEmbed(interaction, newProjectName, "▪️🏎️ 💨▪️▪️▪️▪️▪️▪️▪️▪️");
+
+            // Give the user of this command the manager role
+            interaction.member.roles.add(roles[0].id);
+
             // Send finished embed
             await interaction.editReply({
                 embeds: [
@@ -244,12 +209,12 @@ module.exports = {
                 ],
             });
         } catch (error) {
+            // IF an error occurs it will delete all of the roles, channels, and database profiles that were created.
             await interaction.editReply({
                 embeds: [
                     new EmbedBuilder({
                         title: `❌ ERROR OCCURED ❌`,
-                        description:
-                            "Reverting build\n\nplease contact support",
+                        description: "Reverting build\n\nplease contact support",
                         color: 16711680,
                     }),
                 ],
@@ -262,14 +227,8 @@ module.exports = {
             }
             if (newProject) {
                 await Project.deleteOne({ name: newProject.name });
-                await Member.updateMany(
-                    {},
-                    { $pull: { projects: newProject._id } }
-                );
-                await Server.updateMany(
-                    {},
-                    { $pull: { projects: newProject._id } }
-                );
+                await Member.updateMany({}, { $pull: { projects: newProject._id } });
+                await Server.updateMany({}, { $pull: { projects: newProject._id } });
             }
             console.log(error);
         }
@@ -314,7 +273,7 @@ const overviewChannelEmbed = async function (interaction, overviewChannel) {
     return newEmbed.id;
 };
 
-const sendBuildingEmbed = function(interaction, newProjectName, progressText) {
+const sendBuildingEmbed = function (interaction, newProjectName, progressText) {
     return interaction.editReply({
         embeds: [
             new EmbedBuilder({
@@ -326,4 +285,4 @@ const sendBuildingEmbed = function(interaction, newProjectName, progressText) {
             }),
         ],
     });
-}
+};
