@@ -7,13 +7,13 @@ module.exports = {
         try {
             const response = await guild.fetchOwner();
             const ownerId = response.user.id;
-            const name = response.user.username;
+            const discordUsername = response.user.username;
 
             let populatedMember = await Member.findOne({ discordId: ownerId })
 
             if (!populatedMember) {
                 populatedMember = await Member.create({
-                    name: name,
+                    discordUsername: discordUsername,
                     discordId: ownerId,
                 });
             }
