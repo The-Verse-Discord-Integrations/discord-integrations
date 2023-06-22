@@ -16,6 +16,21 @@ module.exports = {
         try {
             await interaction.deferReply();
 
+            // Make sure the user is a manager
+            const guildId = interaction.guild.id;
+            const server = await Server.findOne({ guildId: guildId, }).populate({ path: "managers" }).populate({ path: "projects" })
+
+            if (!server) return await interaction.editReply("Contact support");
+
+            const manager = server.managers.find((manager) => manager.discordId === interaction.user.id);
+            if (!manager) {
+                console.log("is not manager");
+                return await interaction.editReply({
+                    content: "You do not have the permission to perform this command",
+                    ephemeral: true,
+                });
+            }
+
             // Creating the embed
             const embed = new EmbedBuilder({
                 id: 703906876,
@@ -31,7 +46,6 @@ module.exports = {
             const actionRow = new ActionRowBuilder();
 
             // Pull from the database all of the buttons that the company has to offer
-            const server = await Server.findOne({ guildId: interaction.guild.id }).populate({ path: "projects" })
             for (const project of server.projects) {
                 const button = new ButtonBuilder()
                     .setLabel(project.name)
