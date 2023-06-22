@@ -16,6 +16,11 @@ const projectSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Member",
+        required: true
+    },
     managers: [
         {
             type: mongoose.Schema.Types.ObjectId,

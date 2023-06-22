@@ -190,6 +190,7 @@ module.exports = {
                 name: newProjectName,
                 dashBoardId: dashBoardId,
                 projectsForumId: projectsForum.id,
+                owner: manager,
                 managers: [manager],
                 members: [manager],
                 categoryId: category.id,
