@@ -192,42 +192,44 @@ module.exports = {
             // const server = await Server.updateOne({ guildId: guildId }, { $push: { projects: newProject } });
             server.projects.push(newProject)
             await server.save()
-            
+
             sendBuildingEmbed(interaction, newProjectName, "▪️🏎️ 💨▪️▪️▪️▪️▪️▪️▪️▪️");
 
             // Give the user the manager role
             interaction.member.roles.add(roles[0].id);
-            
-            // Update view node embed
-            const viewNodeEmbedChannel = await interaction.client.channels.fetch(server.viewProjectsEmbed.channelId)
-            const viewNodeEmbedMessage = await viewNodeEmbedChannel.messages.fetch(server.viewProjectsEmbed.embedId)
 
-            // Creating the embed
-            const embed = new EmbedBuilder({
-                id: 703906876,
-                title: "View Nodes",
-                description: "Toggle the nodes you want to view :arrow_down:",
-                fields: [],
-                thumbnail: {
-                    url: "https://media.licdn.com/dms/image/C560BAQGZsRf5Ro6Zbg/company-logo_200_200/0/1631752036761?e=2147483647&v=beta&t=kVWNkg1BQJDVWm4UhD8L8OmOLxhx_xc2Kc_-V_hC7DQ",
-                },
-            });
+            if (server.viewProjectsEmbed.channelId) {
+                // Update view node embed
+                const viewNodeEmbedChannel = await interaction.client.channels.fetch(server.viewProjectsEmbed.channelId)
+                const viewNodeEmbedMessage = await viewNodeEmbedChannel.messages.fetch(server.viewProjectsEmbed.embedId)
 
-            // Creating an actionRow
-            const actionRow = new ActionRowBuilder();
-            for (const project of server.projects) {
-                const button = new ButtonBuilder()
-                    .setLabel(project.name)
-                    .setCustomId(`toggleViewRole:${project.roles[2].id}:${project.name}`)
-                    .setStyle("Primary")
+                // Creating the embed
+                const embed = new EmbedBuilder({
+                    id: 703906876,
+                    title: "View Nodes",
+                    description: "Toggle the nodes you want to view :arrow_down:",
+                    fields: [],
+                    thumbnail: {
+                        url: "https://media.licdn.com/dms/image/C560BAQGZsRf5Ro6Zbg/company-logo_200_200/0/1631752036761?e=2147483647&v=beta&t=kVWNkg1BQJDVWm4UhD8L8OmOLxhx_xc2Kc_-V_hC7DQ",
+                    },
+                });
 
-                actionRow.addComponents(button);
+                // Creating an actionRow
+                const actionRow = new ActionRowBuilder();
+                for (const project of server.projects) {
+                    const button = new ButtonBuilder()
+                        .setLabel(project.name)
+                        .setCustomId(`toggleViewRole:${project.roles[2].id}:${project.name}`)
+                        .setStyle("Primary")
+
+                    actionRow.addComponents(button);
+                }
+                // Editing the existing embed
+                viewNodeEmbedMessage.edit({
+                    embeds: [embed],
+                    components: [actionRow]
+                })
             }
-            // Editing the existing embed
-            viewNodeEmbedMessage.edit({
-                embeds: [embed],
-                components: [actionRow]
-            })
 
             // Send finished embed
             await interaction.editReply({
