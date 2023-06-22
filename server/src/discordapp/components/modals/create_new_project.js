@@ -42,10 +42,6 @@ module.exports = {
                     type: ChannelType.GuildText,
                 },
                 {
-                    name: "📅︱daily-stand-up",
-                    type: ChannelType.GuildText,
-                },
-                {
                     name: "🔗︱links",
                     type: ChannelType.GuildText,
                 },
@@ -118,7 +114,7 @@ module.exports = {
                     },
                     {
                         id: roles[1],
-                        allow: [PermissionsBitField.Flags.ViewChannel],
+                        allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages],
                     },
                     {
                         id: roles[2],
@@ -129,6 +125,31 @@ module.exports = {
             channels.push(projectsForum);
 
             sendBuildingEmbed(interaction, newProjectName, "▪️▪️▪️▪️▪️🏎️ 💨▪️▪️▪️▪️");
+            
+            const dailyStandup = await interaction.guild.channels.create({
+                name: "📅︱daily-stand-up",
+                type: ChannelType.GuildText,
+                parent: category,
+                permissionOverwrites: [
+                    {
+                        id: interaction.guild.roles.everyone,
+                        deny: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages],
+                    },
+                    {
+                        id: roles[0],
+                        allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages],
+                    },
+                    {
+                        id: roles[1],
+                        allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages],
+                    },
+                    {
+                        id: roles[2],
+                        allow: [PermissionsBitField.Flags.ViewChannel],
+                    },
+                ],
+            });
+            channels.push(dailyStandup);
 
             // Building the rest of the channels
             for (const channel of newChannels) {
