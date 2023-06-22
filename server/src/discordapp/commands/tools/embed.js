@@ -17,7 +17,7 @@ module.exports = {
             id: 703906876,
             title: "Onboarding Next Steps",
             description:
-                "‎ \n:one:︱Introduce yourself to the team in\n\n⋙<#1114080237609828474>\n\n:two:︱Create accounts for third-party tools\n\n<:notion:1113652415619666003> `-` [Notion](https://www.notion.so/)\n<:miro:1113657553843392584> `-` [Miro](https://miro.com/)\n<:github:1115195977574395996> `-` [GitHub](https://github.com/)\n\n:three:︱Review the different projects The Verse has to offer\n\n‎⋙<#1114299372721668137>\n\n:four: ︱Create team member profile",
+                "‎ \n:one:︱Introduce yourself to the team in\n\n⋙<#848805950282268692>\n\n:two:︱Create accounts for third-party tools\n\n<:notion:1113652415619666003> `-` [Notion](https://www.notion.so/)\n<:miro:1113657553843392584> `-` [Miro](https://miro.com/)\n<:github:1115195977574395996> `-` [GitHub](https://github.com/)\n\n:three:︱Review the different projects The Verse has to offer\n\n‎⋙<#1121516748596838602>\n\n:four: ︱Create team member profile",
             image: {
                 url: "https://images.sharefaith.com/images/3/1363818089219_168/1363818089219_1682.jpg",
             },
@@ -29,18 +29,18 @@ module.exports = {
             .setLabel("Introductions")
             .setStyle(ButtonStyle.Link)
             .setURL(
-                "https://discord.com/channels/1110377897916629083/1114080237609828474"
+                "https://discord.com/channels/848804519847526460/848805950282268692"
             );
 
         const button2 = new ButtonBuilder()
-            .setLabel("Projects")
+            .setLabel("Nodes")
             .setStyle(ButtonStyle.Link)
             .setURL(
-                "https://discord.com/channels/1110377897916629083/1114299372721668137"
+                "https://discord.com/channels/848804519847526460/1121516748596838602"
             );
 
         const button3 = new ButtonBuilder()
-            .setLabel("Create Profile")
+            .setLabel("Create Profile (Offline)")
             .setEmoji("👥")
             .setStyle(ButtonStyle.Link)
             .setURL("https://docs.google.com/forms/u/0/")
