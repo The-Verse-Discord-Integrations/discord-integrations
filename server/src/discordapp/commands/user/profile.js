@@ -10,30 +10,32 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName("profile")
         .setDescription("Responds with the users profile")
-        .addStringOption((option) =>
-            option.setName("user").setDescription("The user you are trying to search")
+        .addUserOption((option) =>
+            option.setName("user").setDescription("The user you are trying to search").setRequired(true)
         ),
     async execute(interaction) {
         await interaction.deferReply({
             ephemeral: true,
         });
-        let userId = interaction.options.getString("user");
 
-        if (!userId) {
-            userId = interaction.user.id;
-        } else {
-            userId = userId.slice(2, userId.length - 1);
-        }
+        // Get the user id from the input
+        let userId = interaction.options.getUser("user").id;
 
+        if (!userId) userId = interaction.user.id;
+        
+        // Grab the user data from the database
         const userData = await Member.findOne({ discordId: userId }).populate({
             path: "projects",
         });
         
+        // @GUARD: return if the user doesn't have a profile yet
         if (!userData) {
             return await interaction.editReply(
                 "This user has not created a profile yet"
             );
         }
+
+        // Grab the user's avatar from the discord server
         const userDiscObj = await interaction.client.users.fetch(userId);
         const avatarURL = userDiscObj.avatarURL();
         const fields = [
