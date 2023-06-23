@@ -11,7 +11,7 @@ module.exports = {
         .setName("profile")
         .setDescription("Responds with the users profile")
         .addStringOption((option) =>
-            option.setName("user").setDescription("The input to echo back")
+            option.setName("user").setDescription("The user you are trying to search")
         ),
     async execute(interaction) {
         await interaction.deferReply({
