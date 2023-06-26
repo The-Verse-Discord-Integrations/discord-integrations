@@ -1,26 +1,4 @@
 POST http://localhost:3000/api/formSubmit/onBoarding
 Content-Type: application/json
 
-{
-  "Full Name": "dingo",
-  "Discord Username - ex: JohnDoe123 (Case Sensative)": "dingo",
-  "Miro Email - ex: johndoe@gmail.com": "dinog",
-  "GitHub Username - ex: johndoe123": "indog",
-  "What role(s) will you be taking in The Verse?": [
-    "Web Developer"
-  ],
-  "What product(s) will you be working on?": [
-    "WalkXR"
-  ],
-  "Skills": [
-    "Option 1"
-  ],
-  "What are you hoping to learn during this internship at The Verse?": "dingo",
-  "Goal 1:": "dingo",
-  "Goal 2:": "dingo",
-  "Goal 3:": "dingo",
-  "Confirm the number of hours you will be working": "40",
-  "Start Date": "2023-06-21",
-  "End Date": "2023-06-28",
-  "Any other questions or comments": "dingo\n"
-}
+{"Full Name":"Brandon Howard","Discord Username - ex: JohnDoe123 (Case Sensative)":"brandonhoward","Miro Email - ex: johndoe@gmail.com":"brandon@amgineink.com","GitHub Username - ex: johndoe123":"brandon528","What role(s) will you be taking in The Verse?":["Management ___"],"What product(s) will you be working on?":["Sound & Color","WEB3","Discord & Beyond"],"Skills":["Option 1"],"What are you hoping to learn during this internship at The Verse?":"How to monetize innovation","Goal 1:":"Provide a learning experience.","Goal 2:":"Provide a positive experience.","Goal 3:":"Gain from the wisdom of others.","Confirm the number of hours you will be working":"30","Start Date":"2020-01-01","End Date":"2024-12-31","Any other questions or comments":"I have a 2nd git hub repository. I could use some assistance merging the two.\n\nI can help on the skills/category breakdowns for the mentorship questions."}
