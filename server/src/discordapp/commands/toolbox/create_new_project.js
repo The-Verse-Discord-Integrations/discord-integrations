@@ -8,7 +8,7 @@ const {
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName("create_new_node")
+        .setName("toolbox_create_new_node")
         .setDescription("Creates new node"),
     async execute(interaction) {
         // Send the Modal to get the name of the project that is being created

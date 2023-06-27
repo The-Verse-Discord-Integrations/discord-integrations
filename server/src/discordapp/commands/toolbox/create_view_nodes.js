@@ -10,7 +10,7 @@ const Server = require('../../../../models/server');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName("create_view_nodes")
+        .setName("toolbox_create_view_nodes")
         .setDescription("Creates an view projects embed"),
     async execute(interaction, client) {
         try {
