@@ -42,24 +42,24 @@ module.exports = {
                 },
             });
 
-            // Creating an actionRow
-            const actionRow = new ActionRowBuilder();
-
-            // Pull from the database all of the buttons that the company has to offer
-            for (const project of server.projects) {
+            const actionRows = []
+            for (let i = 0; i < server.projects.length; i++) {
+                if (i % 5 === 0) {
+                    actionRows.push(new ActionRowBuilder())
+                }
                 const button = new ButtonBuilder()
-                    .setLabel(project.name)
-                    .setCustomId(`toggleViewRole:${project.roles[2].id}:${project.name}`)
+                    .setLabel(server.projects[i].name)
+                    .setCustomId(`toggleViewRole:${server.projects[i].roles[2].id}:${server.projects[i].name}`)
                     .setStyle("Primary")
 
-                actionRow.addComponents(button);
+                actionRows[actionRows.length - 1].addComponents(button);
             }
 
             // Sending the embed back to the client
             await interaction.deleteReply();
             const viewNodeEmbed = await interaction.channel.send({
                 embeds: [embed],
-                components: actionRow.components.length ? [actionRow] : undefined,
+                components: actionRows.length ? actionRows : undefined,
             });
 
             //Adding the embedId to the server in the database

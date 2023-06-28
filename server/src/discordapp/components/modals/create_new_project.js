@@ -125,7 +125,7 @@ module.exports = {
             channels.push(projectsForum);
 
             sendBuildingEmbed(interaction, newProjectName, "▪️▪️▪️▪️▪️🏎️ 💨▪️▪️▪️▪️");
-            
+
             const dailyStandup = await interaction.guild.channels.create({
                 name: "📅︱daily-stand-up",
                 type: ChannelType.GuildText,
@@ -213,6 +213,7 @@ module.exports = {
             // Add the Project to the Sever database
             // const server = await Server.updateOne({ guildId: guildId }, { $push: { projects: newProject } });
             server.projects.push(newProject)
+            if (server.projects.length > 25) throw "error"
             await server.save()
 
             sendBuildingEmbed(interaction, newProjectName, "▪️🏎️ 💨▪️▪️▪️▪️▪️▪️▪️▪️");
@@ -236,20 +237,33 @@ module.exports = {
                     },
                 });
 
-                // Creating an actionRow
-                const actionRow = new ActionRowBuilder();
-                for (const project of server.projects) {
+                // const actionRow = new ActionRowBuilder();
+                // for (const project of server.projects) {
+                //     const button = new ButtonBuilder()
+                //         .setLabel(project.name)
+                //         .setCustomId(`toggleViewRole:${project.roles[2].id}:${project.name}`)
+                //         .setStyle("Primary")
+
+                //     actionRow.addComponents(button);
+                // }
+                // Creating actionRows array
+                const actionRows = []
+                for (let i = 0; i < server.projects.length; i++) {
+                    if (i % 5 === 0) {
+                        actionRows.push(new ActionRowBuilder())
+                    }
                     const button = new ButtonBuilder()
-                        .setLabel(project.name)
-                        .setCustomId(`toggleViewRole:${project.roles[2].id}:${project.name}`)
+                        .setLabel(server.projects[i].name)
+                        .setCustomId(`toggleViewRole:${server.projects[i].roles[2].id}:${server.projects[i].name}`)
                         .setStyle("Primary")
 
-                    actionRow.addComponents(button);
+                    actionRows[actionRows.length - 1].addComponents(button);
                 }
+
                 // Editing the existing embed
                 viewNodeEmbedMessage.edit({
                     embeds: [embed],
-                    components: [actionRow]
+                    components: actionRows
                 })
             }
 
