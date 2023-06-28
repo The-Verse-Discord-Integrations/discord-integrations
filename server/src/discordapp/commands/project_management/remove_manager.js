@@ -5,8 +5,8 @@ const { ChannelType, SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('add_manager')
-        .setDescription('Add a manager to the node (owner command)')
+        .setName('remove_manager')
+        .setDescription('Remove a manager to the node (owner command)')
         .addUserOption((option) => option.setName("user").setDescription("The user to be added as a manager").setRequired(true))
         .addBooleanOption((option) => option.setName("confirmation").setDescription("Please confirm this command").setRequired(true)),
     async execute(interaction) {
@@ -16,11 +16,14 @@ module.exports = {
         const cmdUserId = interaction.user.id
         const inputUserId = interaction.options.getUser('user').id
         try {
+            // @GUARD: Make sure the user doesn't use this command on themselves
+            if (cmdUserId === inputUserId) return await interaction.editReply("You cannot use this command on yourself you must transfer ownership, utilize the /transfer_ownership command")
+
             // @GUARD: Make sure the command is executed inside a category
             if (!categoryId) return await interaction.editReply("You can only execute this command inside a node")
 
             // Grab the node from the database
-            const project = await Project.findOne({ categoryId: categoryId }).populate("owner")
+            const project = await Project.findOne({ categoryId: categoryId }).populate("owner").populate("managers")
 
             // @GUARD: Check to make sure the project exists
             if (!project) return await interaction.editReply("You can only execute this command inside a node")
@@ -28,33 +31,28 @@ module.exports = {
             // @GUARD: Check to make sure the user is the owner of the node
             if (cmdUserId !== project.owner.discordId) return await interaction.editReply("You do not have the permission to perform this command")
 
-            // Grab the inputed user from the database
-            const newManager = await Member.findOne({ discordId: inputUserId })
+            // Remove the user from the managers array
+            let userFound = false;
+            project.managers = project.managers.filter(manager => {
+                if (manager.discordId !== inputUserId) return true
 
-            // @GUARD: Check to make sure the user exists
-            if (!newManager) return await interaction.editReply("This user has yet to create a profile")
+                userFound = true;
+                return false
+            })
 
-            // @GUARD: Check to make sure the user is not already a manager
-            if (project.managers.indexOf(newManager._id) !== -1) return await interaction.editReply("This user is already a manager")
+            // @GUARD: check to see if the user was a manager
+            if (!userFound) return await interaction.editReply("This user is not currently a manger")
 
-            // Add the user to project managers array
-            project.managers.push(newManager._id);
-            project.members.indexOf(newManager._id) === -1 && project.members.push(newManager._id)
-            project.save();
+            project.save()
 
-            // If the project is not in the users project array add it
-            if (newManager.projects.indexOf(project._id) === -1) {
-                newManager.projects.push(project)
-                await newManager.save()
-            }
-
-            // Give the user the manager role and take away the viewer role and the creator role.
+            // Remove the users manager role and give them the creator role
             const newManagerDiscObj = await interaction.guild.members.fetch(inputUserId);
-            await newManagerDiscObj.roles.add(project.roles[0].id) // Manager Role
-            await newManagerDiscObj.roles.remove(project.roles[1].id) // Creator Role
+            await newManagerDiscObj.roles.remove(project.roles[0].id) // Manager Role
+            await newManagerDiscObj.roles.add(project.roles[1].id) // Creator Role
             await newManagerDiscObj.roles.remove(project.roles[2].id) // Viewing Role
 
-            await interaction.editReply(`<@${inputUserId}> has been promoted to Manager for the ${project.name} node`)
+
+            await interaction.editReply(`<@${inputUserId}> has been removed as a Manager for the ${project.name} node`)
         } catch (error) {
             console.log(error)
             await interaction.editReply({

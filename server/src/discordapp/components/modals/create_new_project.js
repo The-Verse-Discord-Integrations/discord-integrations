@@ -27,7 +27,7 @@ module.exports = {
         }
 
         // Send Building Embed
-        sendBuildingEmbed(interaction, newProjectName, "▪️▪️▪️▪️▪️▪️▪️▪️▪️🏎️ 💨");
+        await sendBuildingEmbed(interaction, newProjectName, "▪️▪️▪️▪️▪️▪️▪️▪️▪️🏎️ 💨");
 
         // Build Node and populate Database
         let roles = await buildRoles(interaction, newProjectName);
@@ -62,7 +62,7 @@ module.exports = {
             });
             channels.push(category);
 
-            sendBuildingEmbed(interaction, newProjectName, "▪️▪️▪️▪️▪️▪️▪️▪️🏎️ 💨▪️");
+            await sendBuildingEmbed(interaction, newProjectName, "▪️▪️▪️▪️▪️▪️▪️▪️🏎️ 💨▪️");
 
             // Building overview channel and grabbing id
             const overviewChannel = await interaction.guild.channels.create({
@@ -90,13 +90,13 @@ module.exports = {
             });
             channels.push(overviewChannel);
 
-            sendBuildingEmbed(interaction, newProjectName, "▪️▪️▪️▪️▪️▪️▪️🏎️ 💨▪️▪️");
+            await sendBuildingEmbed(interaction, newProjectName, "▪️▪️▪️▪️▪️▪️▪️🏎️ 💨▪️▪️");
 
             // Send dashboard embed to the overview channel
             // @params{ interaction, overviewChannel }
             dashBoardId = await overviewChannelEmbed(interaction, overviewChannel);
 
-            sendBuildingEmbed(interaction, newProjectName, "▪️▪️▪️▪️▪️▪️🏎️ 💨▪️▪️▪️");
+            await sendBuildingEmbed(interaction, newProjectName, "▪️▪️▪️▪️▪️▪️🏎️ 💨▪️▪️▪️");
 
             // Building project channel and grabbing id
             const projectsForum = await interaction.guild.channels.create({
@@ -124,8 +124,8 @@ module.exports = {
             });
             channels.push(projectsForum);
 
-            sendBuildingEmbed(interaction, newProjectName, "▪️▪️▪️▪️▪️🏎️ 💨▪️▪️▪️▪️");
-            
+            await sendBuildingEmbed(interaction, newProjectName, "▪️▪️▪️▪️▪️🏎️ 💨▪️▪️▪️▪️");
+
             const dailyStandup = await interaction.guild.channels.create({
                 name: "📅︱daily-stand-up",
                 type: ChannelType.GuildText,
@@ -179,7 +179,7 @@ module.exports = {
                 channels.push(newChannel);
             }
 
-            sendBuildingEmbed(interaction, newProjectName, "▪️▪️▪️▪️🏎️ 💨▪️▪️▪️▪️▪️");
+            await sendBuildingEmbed(interaction, newProjectName, "▪️▪️▪️▪️🏎️ 💨▪️▪️▪️▪️▪️");
 
             /**
              * MONGODB INTERACTIONS
@@ -201,24 +201,25 @@ module.exports = {
                 ],
             });
 
-            sendBuildingEmbed(interaction, newProjectName, "▪️▪️▪️🏎️ 💨▪️▪️▪️▪️▪️▪️");
+            await sendBuildingEmbed(interaction, newProjectName, "▪️▪️▪️🏎️ 💨▪️▪️▪️▪️▪️▪️");
 
             // Adding the project to the users profile project array
             // await Member.updateOne({ discordId: manager.discordId }, { $push: { projects: newProject } });
             manager.projects.push(newProject)
             await manager.save()
 
-            sendBuildingEmbed(interaction, newProjectName, "▪️▪️🏎️ 💨▪️▪️▪️▪️▪️▪️▪️");
+            await sendBuildingEmbed(interaction, newProjectName, "▪️▪️🏎️ 💨▪️▪️▪️▪️▪️▪️▪️");
 
             // Add the Project to the Sever database
             // const server = await Server.updateOne({ guildId: guildId }, { $push: { projects: newProject } });
             server.projects.push(newProject)
+            if (server.projects.length > 25) throw "error"
             await server.save()
 
-            sendBuildingEmbed(interaction, newProjectName, "▪️🏎️ 💨▪️▪️▪️▪️▪️▪️▪️▪️");
+            await sendBuildingEmbed(interaction, newProjectName, "▪️🏎️ 💨▪️▪️▪️▪️▪️▪️▪️▪️");
 
             // Give the user the manager role
-            interaction.member.roles.add(roles[0].id);
+            await interaction.member.roles.add(roles[0].id);
 
             if (server.viewProjectsEmbed.channelId) {
                 // Update view node embed
@@ -236,20 +237,33 @@ module.exports = {
                     },
                 });
 
-                // Creating an actionRow
-                const actionRow = new ActionRowBuilder();
-                for (const project of server.projects) {
+                // const actionRow = new ActionRowBuilder();
+                // for (const project of server.projects) {
+                //     const button = new ButtonBuilder()
+                //         .setLabel(project.name)
+                //         .setCustomId(`toggleViewRole:${project.roles[2].id}:${project.name}`)
+                //         .setStyle("Primary")
+
+                //     actionRow.addComponents(button);
+                // }
+                // Creating actionRows array
+                const actionRows = []
+                for (let i = 0; i < server.projects.length; i++) {
+                    if (i % 5 === 0) {
+                        actionRows.push(new ActionRowBuilder())
+                    }
                     const button = new ButtonBuilder()
-                        .setLabel(project.name)
-                        .setCustomId(`toggleViewRole:${project.roles[2].id}:${project.name}`)
+                        .setLabel(server.projects[i].name)
+                        .setCustomId(`toggleViewRole:${server.projects[i].roles[2].id}:${server.projects[i].name}`)
                         .setStyle("Primary")
 
-                    actionRow.addComponents(button);
+                    actionRows[actionRows.length - 1].addComponents(button);
                 }
+
                 // Editing the existing embed
-                viewNodeEmbedMessage.edit({
+                await viewNodeEmbedMessage.edit({
                     embeds: [embed],
-                    components: [actionRow]
+                    components: actionRows
                 })
             }
 
