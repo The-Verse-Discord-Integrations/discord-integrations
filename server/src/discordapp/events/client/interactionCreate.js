@@ -123,4 +123,6 @@ async function handleStartMentorshipSkill(interaction, client, customId) {
             }),
         ],
     })
+
+    await interaction.editReply("A mentor will be in contact with you")
 }
