@@ -55,7 +55,7 @@ module.exports = {
 
             // Remove the roles from the user
             const newManagerDiscObj = await interaction.guild.members.fetch(inputUserId);
-            newManagerDiscObj.roles.remove(project.roles[1].id) // Creator Role
+            await newManagerDiscObj.roles.remove(project.roles[1].id) // Creator Role
 
             return await interaction.editReply(`<@${inputUserId}> has been removed as a creator from the ${project.name} node`)
         } catch (error) {

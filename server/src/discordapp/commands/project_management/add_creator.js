@@ -48,8 +48,8 @@ module.exports = {
 
             // Give the user the roles in the discord server
             const newManagerDiscObj = await interaction.guild.members.fetch(inputUserId);
-            newManagerDiscObj.roles.add(project.roles[1].id) // Creator Role
-            newManagerDiscObj.roles.remove(project.roles[2].id) // Viewing Role
+            await newManagerDiscObj.roles.add(project.roles[1].id) // Creator Role
+            await newManagerDiscObj.roles.remove(project.roles[2].id) // Viewing Role
 
             await interaction.editReply(`<@${inputUserId}> has been added as a creator for the ${project.name} node`)
         } catch (error) {

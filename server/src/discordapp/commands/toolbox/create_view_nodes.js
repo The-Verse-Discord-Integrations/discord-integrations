@@ -64,7 +64,7 @@ module.exports = {
 
             //Adding the embedId to the server in the database
             server.viewProjectsEmbed = { channelId: interaction.channel.id, embedId: viewNodeEmbed.id };
-            server.save()
+            await server.save()
         } catch (error) {
             console.log(error)
             await interaction.editReply("An error has occurred please contact support")
