@@ -1,4 +1,4 @@
-const { InteractionType } = require('discord.js')
+const { InteractionType, EmbedBuilder } = require('discord.js')
 
 module.exports = {
     name: "interactionCreate",
@@ -22,42 +22,45 @@ module.exports = {
                     ephemeral: true,
                 });
             }
-        /***
-         * BUTTON CLICK
-         */
+            /***
+             * BUTTON CLICK
+             */
         } else if (interaction.isButton()) {
             const { buttons } = client;
             const { customId } = interaction;
+            try {
+                // Handler for the toggle view role embed
+                if (customId.slice(0, "toggleViewRole".length) === "toggleViewRole")
+                    await handleToggleViewRole(interaction, client, customId);
 
-            // Handler for the toggle view role embed
-            if (customId.slice(0, "toggleViewRole".length) === "toggleViewRole")
-                handleToggleViewRole(interaction, client, customId);
-
-            //Handler for every other button click
-            else {
-                const button = buttons.get(customId);
-
-                if (!button)
-                    return new Error("there is no code for this button");
-
-                try {
-                    await button.execute(interaction, client);
-                } catch (error) {
-                    console.error(error);
+                else if (customId.slice(0, "startMentorshipSkill".length) === "startMentorshipSkill") {
+                    await handleStartMentorshipSkill(interaction, client, customId);
                 }
+                //Handler for every other button click
+                else {
+                    const button = buttons.get(customId);
+
+                    if (!button)
+                        return new Error("there is no code for this button");
+
+
+                    await button.execute(interaction, client);
+                }
+            } catch (error) {
+                console.error(error);
             }
         } else if (interaction.type == InteractionType.ModalSubmit) {
-          const { modals } = client;
-          const { customId } = interaction;
-          const modal = modals.get(customId);
+            const { modals } = client;
+            const { customId } = interaction;
+            const modal = modals.get(customId);
 
-          if (!modal) return new Error("There is no code for this modal");
+            if (!modal) return new Error("There is no code for this modal");
 
-          try {
-            await modal.execute(interaction, client)
-          } catch (error) {
-            console.error(error)
-          }
+            try {
+                await modal.execute(interaction, client)
+            } catch (error) {
+                console.error(error)
+            }
         }
     },
 };
@@ -73,7 +76,7 @@ async function handleToggleViewRole(interaction, client, customId) {
         const data = customId.split(":");
         const roleId = data[1];
         const projectName = data[2];
-        
+
         // Check to see if they have the role
         if (interaction.member.roles.cache.some((role) => role.id === roleId)) {
             // remove the role
@@ -91,4 +94,33 @@ async function handleToggleViewRole(interaction, client, customId) {
         console.log(error);
         return await interaction.editReply({ content: "Bot currently down" });
     }
+}
+
+async function handleStartMentorshipSkill(interaction, client, customId) {
+    const dinoId = '203237501832265730'
+    const brandonhoward = '748322593844494487'
+
+    const data = customId.split(":");
+
+    await interaction.deferReply({ ephemeral: true })
+
+    await client.users.cache.get(dinoId).send({
+        embeds: [
+            new EmbedBuilder({
+                id: 437590445,
+                description: `**${interaction.user.username}** is looking to learn __${data[1]}__`,
+                fields: [],
+            }),
+        ],
+    })
+
+    await client.users.cache.get(brandonhoward).send({
+        embeds: [
+            new EmbedBuilder({
+                id: 437590445,
+                description: `**${interaction.user.username}** is looking to learn __${data[1]}__`,
+                fields: [],
+            }),
+        ],
+    })
 }
