@@ -29,14 +29,14 @@ module.exports = {
             .setLabel("Introductions")
             .setStyle(ButtonStyle.Link)
             .setURL(
-                "https://discord.com/channels/848805037949059082/848805950282268692"
+                "https://discord.com/channels/848804519847526460/848805950282268692"
             );
 
         const button2 = new ButtonBuilder()
             .setLabel("Nodes")
             .setStyle(ButtonStyle.Link)
             .setURL(
-                "https://discord.com/channels/848805037949059082/1121516748596838602"
+                "https://discord.com/channels/848804519847526460/1121516748596838602"
             );
 
         const button3 = new ButtonBuilder()
