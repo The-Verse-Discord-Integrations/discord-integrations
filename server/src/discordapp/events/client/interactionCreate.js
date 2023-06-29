@@ -104,7 +104,7 @@ async function handleStartMentorshipSkill(interaction, client, customId) {
 
     await interaction.deferReply({ ephemeral: true })
 
-    await client.users.cache.get(dinoId).send({
+    await client.users.fetch(dinoId).then(user => user.send({
         embeds: [
             new EmbedBuilder({
                 id: 437590445,
@@ -112,9 +112,10 @@ async function handleStartMentorshipSkill(interaction, client, customId) {
                 fields: [],
             }),
         ],
-    })
+    }))
 
-    await client.users.cache.get(brandonhoward).send({
+
+    await client.users.fetch(brandonhoward).then(user => user.send({
         embeds: [
             new EmbedBuilder({
                 id: 437590445,
@@ -122,7 +123,7 @@ async function handleStartMentorshipSkill(interaction, client, customId) {
                 fields: [],
             }),
         ],
-    })
+    }))
 
     await interaction.editReply("A mentor will be in contact with you")
 }
