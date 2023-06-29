@@ -83,6 +83,7 @@ onFormSubmitRouter.post("/onBoarding", async (request, response) => {
         }))
 
         // Remove the onboarding role
+        return response.send("success")
     } catch (error) {
         console.log(error);
     }
