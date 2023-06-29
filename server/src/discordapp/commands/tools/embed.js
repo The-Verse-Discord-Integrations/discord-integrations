@@ -29,21 +29,21 @@ module.exports = {
             .setLabel("Introductions")
             .setStyle(ButtonStyle.Link)
             .setURL(
-                "https://discord.com/channels/848804519847526460/848805950282268692"
+                "https://discord.com/channels/848805037949059082/848805950282268692"
             );
 
         const button2 = new ButtonBuilder()
             .setLabel("Nodes")
             .setStyle(ButtonStyle.Link)
             .setURL(
-                "https://discord.com/channels/848804519847526460/1121516748596838602"
+                "https://discord.com/channels/848805037949059082/1121516748596838602"
             );
 
         const button3 = new ButtonBuilder()
-            .setLabel("Create Profile (Offline)")
+            .setLabel("Create Profile")
             .setEmoji("👥")
             .setStyle(ButtonStyle.Link)
-            .setURL("https://docs.google.com/forms/u/0/")
+            .setURL("https://docs.google.com/forms/d/e/1FAIpQLScp-DgUJO6xphUo3YYanQ0B2F2LM5klsbE6d2g8PHlT04kxuQ/viewform")
 
         const actionRow = new ActionRowBuilder();
 
