@@ -34,7 +34,7 @@ onFormSubmitRouter.post("/onBoarding", async (request, response) => {
         });
 
         if (!found) {
-            return await client.users.cache.get(dinoId).send({
+            return await client.users.fetch(dinoId).then(user => user.send({
                 embeds: [
                     new EmbedBuilder({
                         id: 437590445,
@@ -42,7 +42,7 @@ onFormSubmitRouter.post("/onBoarding", async (request, response) => {
                         fields: [],
                     }),
                 ],
-            });
+            }))
         }
 
         // Check to see if the user already has a profile
@@ -72,7 +72,7 @@ onFormSubmitRouter.post("/onBoarding", async (request, response) => {
         // SEND MESSAGE TO BEN THAT THE PERSON HAS FINISHED THEIR ONBOARDING
 
         // Send a message to the user in discord that their onboarding is complete.
-        await client.users.cache.get(discordId).send({
+        await client.users.fetch(discordId).then(user => user.send({
             embeds: [
                 new EmbedBuilder({
                     id: 437590445,
@@ -80,9 +80,10 @@ onFormSubmitRouter.post("/onBoarding", async (request, response) => {
                     fields: [],
                 }),
             ],
-        });
+        }))
 
         // Remove the onboarding role
+        return response.send("success")
     } catch (error) {
         console.log(error);
     }
