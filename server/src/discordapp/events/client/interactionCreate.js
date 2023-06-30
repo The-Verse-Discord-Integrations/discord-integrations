@@ -1,4 +1,4 @@
-const { InteractionType, EmbedBuilder } = require('discord.js')
+const { InteractionType } = require('discord.js')
 
 module.exports = {
     name: "interactionCreate",
@@ -33,9 +33,6 @@ module.exports = {
                 if (customId.slice(0, "toggleViewRole".length) === "toggleViewRole")
                     await handleToggleViewRole(interaction, client, customId);
 
-                else if (customId.slice(0, "startMentorshipSkill".length) === "startMentorshipSkill") {
-                    await handleStartMentorshipSkill(interaction, client, customId);
-                }
                 //Handler for every other button click
                 else {
                     const button = buttons.get(customId);
@@ -60,6 +57,18 @@ module.exports = {
                 await modal.execute(interaction, client)
             } catch (error) {
                 console.error(error)
+            }
+        } else if (interaction.isStringSelectMenu()) {
+            const { selectMenus } = client;
+            const { customId } = interaction;
+            const menu = selectMenus.get(customId);
+
+            if (!menu) return new Error("There is no code for this select menu")
+
+            try {
+                await menu.execute(interaction, client);
+            } catch (error) {
+                console.log(error)
             }
         }
     },
@@ -94,36 +103,4 @@ async function handleToggleViewRole(interaction, client, customId) {
         console.log(error);
         return await interaction.editReply({ content: "Bot currently down" });
     }
-}
-
-async function handleStartMentorshipSkill(interaction, client, customId) {
-    const dinoId = '203237501832265730'
-    const brandonhoward = '748322593844494487'
-
-    const data = customId.split(":");
-
-    await interaction.deferReply({ ephemeral: true })
-
-    await client.users.fetch(dinoId).then(user => user.send({
-        embeds: [
-            new EmbedBuilder({
-                id: 437590445,
-                description: `**${interaction.user.username}** is looking to learn __${data[1]}__`,
-                fields: [],
-            }),
-        ],
-    }))
-
-
-    await client.users.fetch(brandonhoward).then(user => user.send({
-        embeds: [
-            new EmbedBuilder({
-                id: 437590445,
-                description: `**${interaction.user.username}** is looking to learn __${data[1]}__`,
-                fields: [],
-            }),
-        ],
-    }))
-
-    return await interaction.editReply("A mentor will be in contact with you")
 }

@@ -19,7 +19,7 @@ module.exports = {
             id: 703906876,
             title: "Mentorship Program",
             description:
-                "What skill do you want to learn?                                ",
+                "Start your journey here :arrow_down:",
             fields: [],
             image: {
                 "url": "https://d57439wlqx3vo.cloudfront.net/iblock/9a7/9a765ca1eb4efa74acdcdb40ef7057ce/8777a317dbe9cbc2f2be3afa533e6d13.png"
@@ -27,23 +27,18 @@ module.exports = {
             
         });
 
-        const actionRows = []
-        for (let i = 0; i < skills.length; i++) {
-            if (i % 5 === 0) {
-                actionRows.push(new ActionRowBuilder())
-            }
-            const button = new ButtonBuilder()
-                .setLabel(skills[i])
-                .setCustomId(`startMentorshipSkill:${skills[i]}`)
+        const actionRow = new ActionRowBuilder();
+        const button = new ButtonBuilder()
+                .setLabel("Start")
+                .setCustomId(`startMentorshipSkill`)
                 .setStyle("Primary")
 
-            actionRows[actionRows.length - 1].addComponents(button);
-        }
+        actionRow.addComponents(button)
 
         await interaction.deleteReply();
         await interaction.channel.send({
             embeds: [embed],
-            components: actionRows,
+            components: [actionRow],
         });
     },
 };
