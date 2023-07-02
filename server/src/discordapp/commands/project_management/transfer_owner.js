@@ -36,7 +36,7 @@ module.exports = {
         if (!newOwnProfile) return await interaction.editReply("This user has yet to create a profile") //checking if new owner has profile
 
 
-        //adding newOwner to members array is not already there
+        //adding newOwner to members array if not already there
         if (project.members.find((member) => member.discordId !== newOwner)) {
 
             project.members.push(newOwnProfile._id);
