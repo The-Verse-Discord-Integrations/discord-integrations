@@ -11,23 +11,22 @@ onFormSubmitRouter.post("/onBoarding", async (request, response) => {
     try {
         const formAnswers = Object.values(request.body);
         const fName = formAnswers[0];
-        const fUsername = formAnswers[1];
+        const fdiscordId = formAnswers[1];
         const fMiro = formAnswers[2];
         const fGithub = formAnswers[3];
         const fRoles = formAnswers[4];
         const fSkills = formAnswers[6];
-        const fGoals = [formAnswers[8], formAnswers[9], formAnswers[10]];
-        const fStartDate = formAnswers[12];
-        const fEndDate = formAnswers[13];
+        const fGoals = [formAnswers[7], formAnswers[8], formAnswers[9]];
+        const fWeeklyHours = parseInt(formAnswers[10]);
+        const fStartDate = formAnswers[11];
+        const fEndDate = formAnswers[12];
 
         // Check to make sure the discord user is correct in the server
-        const guildMembers = await client.guilds.cache
-            .get(DISC_GUILDID)
-            .members.fetch();
+        const guildMembers = await client.guilds.cache.get(DISC_GUILDID).members.fetch();
         let found = false;
         let discordId;
         guildMembers.forEach((member) => {
-            if (member.user.username === fUsername) {
+            if (member.user.id === fdiscordId) {
                 found = true;
                 discordId = member.user.id;
             }
@@ -38,7 +37,7 @@ onFormSubmitRouter.post("/onBoarding", async (request, response) => {
                 embeds: [
                     new EmbedBuilder({
                         id: 437590445,
-                        description: `${fName} inputed the username: ${fUsername}, It was not found in the server`,
+                        description: `${fName} inputed the username: ${fName}, It was not found in the server`,
                         fields: [],
                     }),
                 ],
@@ -48,21 +47,45 @@ onFormSubmitRouter.post("/onBoarding", async (request, response) => {
         // Check to see if the user already has a profile
         let member = await Member.findOne({ discordId: discordId });
 
-        // Create user profile
-        if (!member) {
-            member = await Member.create({
-                name: fName,
-                discordUsername: fUsername,
-                discordId: discordId,
-                miro: fMiro,
-                github: fGithub,
-                startDate: fStartDate,
-                endDate: fEndDate,
-                goals: fGoals,
-                roles: fRoles,
-                skills: fSkills
-            });
+        // Update user if already exists
+        if (member) {
+            member.name = fName;
+            member.miro = fMiro;
+            member.github = fGithub;
+            member.startDate = fStartDate;
+            member.endDate = fEndDate;
+            member.goals = fGoals;
+            member.roles = fRoles;
+            member.skills = fSkills;
+            member.weeklyHours = fWeeklyHours;
+
+            member.save();
+
+            return await client.users.fetch(discordId).then(user => user.send({
+                embeds: [
+                    new EmbedBuilder({
+                        id: 437590445,
+                        description: "You have updated your profile",
+                        fields: [],
+                    }),
+                ],
+            }))
         }
+
+        // Create new user
+        member = await Member.create({
+            name: fName,
+            discordId: discordId,
+            miro: fMiro,
+            github: fGithub,
+            startDate: fStartDate,
+            endDate: fEndDate,
+            goals: fGoals,
+            roles: fRoles,
+            skills: fSkills,
+            weeklyHours: fWeeklyHours
+        });
+
 
         const result = await Server.updateOne(
             { guildId: DISC_GUILDID },
@@ -76,7 +99,7 @@ onFormSubmitRouter.post("/onBoarding", async (request, response) => {
             embeds: [
                 new EmbedBuilder({
                     id: 437590445,
-                    description: "This is an embed!",
+                    description: "Your profile has been created",
                     fields: [],
                 }),
             ],
