@@ -40,13 +40,11 @@ module.exports = {
 
             project.members.push(newOwnProfile._id);
             newOwnProfile.projects.push(project._id);
-            await project.save(); //since this is inside a for-loop do we need to separately save it?
             await newOwnProfile.save();
         }
     
         if (project.managers.indexOf(newOwnProfile._id) === -1){ //checking if new owner is already inside managers array
             project.managers.push(newOwnProfile._id);  //adding new owner to managers array
-            await project.save(); //since this is inside a for-loop do we need to separately save it?
         }
         
         
@@ -58,7 +56,7 @@ module.exports = {
         newOwnProfile.roles.remove(project.roles[1].id) // Creator Role
         newOwnProfile.roles.remove(project.roles[2].id) // Viewing Role
 
-        project.save(); //reduce amount of times we access database
+        await project.save(); //reduce amount of times we access database
 
 
         await interaction.editReply(`<@${newOwner}> has been tranferred ownership for the ${project.name} node`)
