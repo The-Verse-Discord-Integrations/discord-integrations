@@ -4,10 +4,6 @@ const memberSchema = new mongoose.Schema({
     name: {
         type: String,
     },
-    discordUsername: {
-        type: String,
-        required: true,
-    },
     discordId: {
         type: String,
         required: true,
@@ -43,6 +39,9 @@ const memberSchema = new mongoose.Schema({
             type: String,
         },
     ],
+    weeklyHours: {
+        type: Number
+    }
 });
 
 memberSchema.set("toJSON", {
