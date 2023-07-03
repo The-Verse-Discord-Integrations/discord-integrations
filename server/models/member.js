@@ -39,6 +39,9 @@ const memberSchema = new mongoose.Schema({
             type: String,
         },
     ],
+    weeklyHours: {
+        type: Number
+    }
 });
 
 memberSchema.set("toJSON", {

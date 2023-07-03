@@ -50,9 +50,9 @@ module.exports = {
 
             // Give the user the manager role and take away the viewer role and the creator role.
             const newManagerDiscObj = await interaction.guild.members.fetch(inputUserId);
-            newManagerDiscObj.roles.add(project.roles[0].id) // Manager Role
-            newManagerDiscObj.roles.remove(project.roles[1].id) // Creator Role
-            newManagerDiscObj.roles.remove(project.roles[2].id) // Viewing Role
+            await newManagerDiscObj.roles.add(project.roles[0].id) // Manager Role
+            await newManagerDiscObj.roles.remove(project.roles[1].id) // Creator Role
+            await newManagerDiscObj.roles.remove(project.roles[2].id) // Viewing Role
 
             
 

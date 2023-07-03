@@ -22,42 +22,54 @@ module.exports = {
                     ephemeral: true,
                 });
             }
-        /***
-         * BUTTON CLICK
-         */
+            /***
+             * BUTTON CLICK
+             */
         } else if (interaction.isButton()) {
             const { buttons } = client;
             const { customId } = interaction;
+            try {
+                // Handler for the toggle view role embed
+                if (customId.slice(0, "toggleViewRole".length) === "toggleViewRole")
+                    await handleToggleViewRole(interaction, client, customId);
 
-            // Handler for the toggle view role embed
-            if (customId.slice(0, "toggleViewRole".length) === "toggleViewRole")
-                handleToggleViewRole(interaction, client, customId);
+                //Handler for every other button click
+                else {
+                    const button = buttons.get(customId);
 
-            //Handler for every other button click
-            else {
-                const button = buttons.get(customId);
+                    if (!button)
+                        return new Error("there is no code for this button");
 
-                if (!button)
-                    return new Error("there is no code for this button");
 
-                try {
                     await button.execute(interaction, client);
-                } catch (error) {
-                    console.error(error);
                 }
+            } catch (error) {
+                console.error(error);
             }
         } else if (interaction.type == InteractionType.ModalSubmit) {
-          const { modals } = client;
-          const { customId } = interaction;
-          const modal = modals.get(customId);
+            const { modals } = client;
+            const { customId } = interaction;
+            const modal = modals.get(customId);
 
-          if (!modal) return new Error("There is no code for this modal");
+            if (!modal) return new Error("There is no code for this modal");
 
-          try {
-            await modal.execute(interaction, client)
-          } catch (error) {
-            console.error(error)
-          }
+            try {
+                await modal.execute(interaction, client)
+            } catch (error) {
+                console.error(error)
+            }
+        } else if (interaction.isStringSelectMenu()) {
+            const { selectMenus } = client;
+            const { customId } = interaction;
+            const menu = selectMenus.get(customId);
+
+            if (!menu) return new Error("There is no code for this select menu")
+
+            try {
+                await menu.execute(interaction, client);
+            } catch (error) {
+                console.log(error)
+            }
         }
     },
 };
@@ -77,18 +89,18 @@ async function handleToggleViewRole(interaction, client, customId) {
         // Check to see if they have the role
         if (interaction.member.roles.cache.some((role) => role.id === roleId)) {
             // remove the role
-            interaction.member.roles.remove(roleId);
+            await interaction.member.roles.remove(roleId);
             return await interaction.editReply({
                 content: `You are no longer viewing ${projectName}`,
             });
         }
         // add the role
-        interaction.member.roles.add(roleId);
+        await interaction.member.roles.add(roleId);
         return await interaction.editReply({
             content: `You can now view ${projectName}`,
         });
     } catch (error) {
         console.log(error);
-        return await interaction.reply({ content: "Bot currently down" });
+        return await interaction.editReply({ content: "Bot currently down" });
     }
 }

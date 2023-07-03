@@ -40,10 +40,10 @@ module.exports = {
             );
 
         const button3 = new ButtonBuilder()
-            .setLabel("Create Profile (Offline)")
+            .setLabel("Create Profile")
             .setEmoji("👥")
             .setStyle(ButtonStyle.Link)
-            .setURL("https://docs.google.com/forms/u/0/")
+            .setURL("https://docs.google.com/forms/d/e/1FAIpQLScp-DgUJO6xphUo3YYanQ0B2F2LM5klsbE6d2g8PHlT04kxuQ/viewform")
 
         const actionRow = new ActionRowBuilder();
 
