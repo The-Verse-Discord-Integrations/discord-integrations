@@ -54,6 +54,10 @@ module.exports = {
             await newManagerDiscObj.roles.remove(project.roles[1].id) // Creator Role
             await newManagerDiscObj.roles.remove(project.roles[2].id) // Viewing Role
 
+            
+
+
+
             await interaction.editReply(`<@${inputUserId}> has been promoted to Manager for the ${project.name} node`)
         } catch (error) {
             console.log(error)
