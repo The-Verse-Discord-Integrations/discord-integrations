@@ -42,7 +42,7 @@ module.exports = {
             );
 
         const button3 = new ButtonBuilder()
-        .setLabel("Create Profile")
+        .setLabel("Create/Edit Profile")
         .setCustomId(`createProfile`)
         .setStyle("Primary")
 
