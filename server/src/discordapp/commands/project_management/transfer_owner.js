@@ -23,9 +23,9 @@ module.exports = {
             if (cmdUserId === newOwner) return await interaction.editReply("Cannot execute command on self")
             const project = await Project.findOne({ categoryId: categoryId }).populate("managers").populate("members").populate("owner") //get the project
 
-            const currOwner = project.owner.discordId
-
             if (!project) return await interaction.editReply("You can only execute this command inside a node")
+
+            const currOwner = project.owner.discordId
 
             //check if person giving command is already owner
             if (cmdUserId !== currOwner) return await interaction.editReply("You must be owner of this project to transfer ownership")
