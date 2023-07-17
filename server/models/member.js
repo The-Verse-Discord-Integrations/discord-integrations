@@ -41,7 +41,15 @@ const memberSchema = new mongoose.Schema({
     ],
     weeklyHours: {
         type: Number
-    }
+    },
+    weeklyMessageCount: {
+        type: Number
+    },
+    weeklyMessageCountCollection: [
+        {
+            type: Number,
+        }
+    ]
 });
 
 memberSchema.set("toJSON", {
