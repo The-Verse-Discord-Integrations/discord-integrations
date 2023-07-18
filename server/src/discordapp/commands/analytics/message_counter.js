@@ -35,22 +35,27 @@ module.exports = {
             const startDate = moment().startOf('isoWeek').toDate();
             const endDate = moment().endOf('isoWeek').toDate();
         
-            const guild = client.guilds.cache.get(DISC_GUILDID); //Figure out how to use cache to update message counts periodically if runtime is too much
-        
+            const guild = client.guilds.cache.get(DISC_GUILDID); //Using cache to reduce database accesses. Figure out how to use cache to update message counts periodically if runtime is too much
+            //unnecesary checks can go around if get guild directly from instructions command
             if (guild) {
-              const member = guild.members.cache.find((member) => member.user.id === user.id);
+    
+              const member = await Member.findOne({ discordId: targetUser }) //check targetUser is a member in the server
+
+              if (!member) return await interaction.editReply("This user is not a member of the server")
+
+
               if (member) {
-                const userMessages = await guild.channels.cache.reduce(async (accPromise, channel) => {
+                const userMessages = await guild.channels.cache.reduce(async (accPromise, channel) => {     //fetch texts from each channel (??)
                   const acc = await accPromise;
-                  if (channel.isText()) {
-                    const messages = await channel.messages.fetch({ limit: 100 }); //Staying within by API limits by rate limiting
-                    const messagesFromUser = messages.filter((msg) => msg.author.id === targetUser);
+                  if (channel.isText()) {   //check the channels being processed are only text channels
+                    const messages = await channel.messages.fetch({ limit: 100 }); //Staying within by API limits by rate limiting (can process 5000/10sec)
+                    const messagesFromUser = messages.filter((msg) => msg.author.id === targetUser);    //filter for only messages sent by user
                     const messagesWithinRange = messagesFromUser.filter(
                       (msg) =>
                         msg.createdAt >= startDate &&
                         msg.createdAt <= endDate
                     );
-                    acc.push(...messagesWithinRange.array());
+                    acc.push(...messagesWithinRange.array());   //push onto array
                   }
                   return acc;
                 }, []);
