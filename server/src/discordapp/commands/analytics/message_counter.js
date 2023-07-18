@@ -23,10 +23,10 @@ module.exports = {
         async execute(interaction) {
         if (!interaction.options.getBoolean("confirmation")) return await interaction.reply({ content: "Please confirm command", ephemeral: true })
         await interaction.deferReply({ ephemeral: true })
-    
+            
+        const client = new Discord.Client();
         
         try{
-            const client = new Discord.Client();
 
             client.on('ready', () => {
             console.log(`Logged in as ${client.user.tag}`);
@@ -63,9 +63,7 @@ module.exports = {
             }
             });
 
-            connectDB(); // Establish MongoDB connection
 
-            client.login('YOUR_BOT_TOKEN');
 
         } catch (error) {
             console.log(error)
