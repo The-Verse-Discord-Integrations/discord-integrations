@@ -28,42 +28,52 @@ module.exports = {
         
         try{
 
-            client.on('ready', () => {
-            console.log(`Logged in as ${client.user.tag}`);
-            });
-
             client.on('messageCreate', async (message) => {
-            if (message.content.startsWith('/messages')) {
-                const args = message.content.split(' ');
-                const targetUser = args[1];
-
-                const user = await User.findOne({ username: targetUser });      //Checking if user exists
-                if (!user) {
-                message.reply('User not found.');
-                return;
+                if (message.content.startsWith('/messages')) {
+                  const args = message.content.split(' ');
+                  const targetUser = args[1];
+              
+                  const user = await User.findOne({ username: targetUser }); // Checking if user exists
+                  if (!user) {
+                    message.reply('User not found.');
+                    return;
+                  }
+              
+                  const startDate = moment().startOf('isoWeek').toDate();
+                  const endDate = moment().endOf('isoWeek').toDate();
+              
+                  const guild = client.guilds.cache.get(DISC_GUILDID); 
+              
+                  if (guild) {
+                    const member = guild.members.cache.find((member) => member.user.id === user.id);
+                    if (member) {
+                      const userMessages = await guild.channels.cache.reduce(async (accPromise, channel) => {
+                        const acc = await accPromise;
+                        if (channel.isText()) {
+                          const messages = await channel.messages.fetch({ limit: 100 });
+                          const messagesFromUser = messages.filter((msg) => msg.author.id === user.id);
+                          const messagesWithinRange = messagesFromUser.filter(
+                            (msg) =>
+                              msg.createdAt >= startDate &&
+                              msg.createdAt <= endDate
+                          );
+                          acc.push(...messagesWithinRange.array());
+                        }
+                        return acc;
+                      }, []);
+              
+                      const messageCount = userMessages.length;
+              
+                      message.reply(
+                        `User ${targetUser} has sent ${messageCount} messages this week.`
+                      );
+                    } else {
+                      message.reply('User not found in the guild.');
+                    }
+                  }
                 }
-
-                const startDate = moment().startOf('isoWeek').toDate();
-                const endDate = moment().endOf('isoWeek').toDate();
-
-                const messages = await message.channel.messages.fetch({
-                limit: 100,
-                });             //error only finding messages sent in channel
-
-                const userMessages = messages.filter(
-                (msg) =>
-                    msg.author.id === user.id &&
-                    msg.createdAt >= startDate &&
-                    msg.createdAt <= endDate
-                );                                  //literally listing out the messages
-
-                message.reply(
-                `User ${targetUser} has sent ${userMessages.size} messages this week.`
-                );
-            }
-            });
-
-            client.login('YOUR_BOT_TOKEN'); //necessary?
+              });
+              
 
         } catch (error) {
             console.log(error)
