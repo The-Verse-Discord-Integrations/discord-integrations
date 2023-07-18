@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
     lastMessageDate: Date,
 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema); //Create new collection to make interactions easier
 
 
 module.exports = {
@@ -24,7 +24,7 @@ module.exports = {
         if (!interaction.options.getBoolean("confirmation")) return await interaction.reply({ content: "Please confirm command", ephemeral: true })
         await interaction.deferReply({ ephemeral: true })
             
-        const client = new Discord.Client();
+        const client = new Discord.Client();  //Handle events
         
         try{
 
@@ -37,7 +37,7 @@ module.exports = {
                 const args = message.content.split(' ');
                 const targetUser = args[1];
 
-                const user = await User.findOne({ username: targetUser });
+                const user = await User.findOne({ username: targetUser });      //Checking if user exists
                 if (!user) {
                 message.reply('User not found.');
                 return;
@@ -48,14 +48,14 @@ module.exports = {
 
                 const messages = await message.channel.messages.fetch({
                 limit: 100,
-                });
+                });             //error only finding messages sent in channel
 
                 const userMessages = messages.filter(
                 (msg) =>
                     msg.author.id === user.id &&
                     msg.createdAt >= startDate &&
                     msg.createdAt <= endDate
-                );
+                );                                  //literally listing out the messages
 
                 message.reply(
                 `User ${targetUser} has sent ${userMessages.size} messages this week.`
@@ -63,7 +63,7 @@ module.exports = {
             }
             });
 
-
+            client.login('YOUR_BOT_TOKEN'); //necessary?
 
         } catch (error) {
             console.log(error)
