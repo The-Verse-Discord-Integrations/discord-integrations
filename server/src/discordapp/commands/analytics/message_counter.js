@@ -42,7 +42,7 @@ module.exports = {
                   const startDate = moment().startOf('isoWeek').toDate();
                   const endDate = moment().endOf('isoWeek').toDate();
               
-                  const guild = client.guilds.cache.get(DISC_GUILDID); 
+                  const guild = client.guilds.cache.get(DISC_GUILDID); //Figure out how to use cache to update message counts periodically if runtime is too much
               
                   if (guild) {
                     const member = guild.members.cache.find((member) => member.user.id === user.id);
@@ -50,7 +50,7 @@ module.exports = {
                       const userMessages = await guild.channels.cache.reduce(async (accPromise, channel) => {
                         const acc = await accPromise;
                         if (channel.isText()) {
-                          const messages = await channel.messages.fetch({ limit: 100 });
+                          const messages = await channel.messages.fetch({ limit: 100 }); //Staying within by API limits by rate limiting
                           const messagesFromUser = messages.filter((msg) => msg.author.id === user.id);
                           const messagesWithinRange = messagesFromUser.filter(
                             (msg) =>
