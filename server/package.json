@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "build:ui": "rm -rf build && cd ../client/ && npm run build && cp -r build ../server",
+    "build:ui": "rm -rf build && cd ../client/ && npm run build && cp -r build ../server/src/API",
     "deploy": "flyctl deploy",
     "deploy:full": "npm run build:ui && npm run deploy",
     "logs:prod": "flyctl logs",
@@ -21,8 +21,11 @@
     "discord-api-types": "^0.37.43",
     "discord.js": "^14.11.0",
     "express": "^4.18.2",
+    "express-session": "^1.17.3",
     "moment": "^2.29.4",
-    "mongoose": "^7.2.1"
+    "mongoose": "^7.2.1",
+    "passport": "^0.6.0",
+    "passport-discord": "^0.1.4"
   },
   "devDependencies": {
     "dotenv": "^16.0.3",
