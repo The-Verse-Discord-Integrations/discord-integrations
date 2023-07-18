@@ -1,16 +1,13 @@
 const Discord = require('discord.js');
 const { ChannelType, SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const moment = require('moment');
+const mongoose = require('mongoose');
 //where am i connecting to mongodb server
-const Member = require('member.js'); //importing user schema to get username, messages, and last messagedate, but need to update somehow?
+const Member = require('./member.js'); //importing user schema to get username, messages, and last messagedate, but need to update somehow?
 
-const userSchema = new mongoose.Schema({
-    username: String,
-    messages: Number,
-    lastMessageDate: Date,
-});
 
-const User = mongoose.model('User', userSchema); //Create new collection to make interactions easier
+
+//const User = mongoose.model('User', userSchema); //Create new collection to make interactions easier
 
 
 module.exports = {
@@ -25,21 +22,51 @@ module.exports = {
         await interaction.deferReply({ ephemeral: true })
             
         const client = new Discord.Client();  //Handle events
-        
+        const targetUser = interaction.options.getUser('user').id
+
+
         try{
 
-            client.on('messageCreate', async (message) => {
-                if (message.content.startsWith('/messages')) {
-                  const args = message.content.split(' ');
-                  const targetUser = args[1];
               
-                  const user = await User.findOne({ username: targetUser }); // Checking if user exists
-                  if (!user) {
-                    message.reply('User not found.');
-                    return;
-                  }
-              
-                  const startDate = moment().startOf('isoWeek').toDate();
+                const startDate = moment().startOf('week');
+                const endDate = moment().endOf('week');
+
+                const searchResults = await message.guild.search({
+                content: `from:${targetUser}`,
+                before: endDate.toISOString(),
+                after: startDate.toISOString(),
+                });
+
+                const messageCount = searchResults.reduce((count, result) => count + result.total, 0);
+                            
+                await interaction.editReply(`<@${targetUser}> has sent ${messageCount} messages this week.`)
+                  
+
+
+        } catch (error) {
+            console.log(error)
+            await interaction.editReply({
+                embeds: [
+                    new EmbedBuilder({
+                        title: `❌ ERROR OCCURED ❌`,
+                        description: "Reverting Process",
+                        color: 16711680,
+                    }),
+                ],
+            });
+        }
+    }
+}
+
+
+/* const userSchema = new mongoose.Schema({
+    username: String,
+    messages: Number,
+    lastMessageDate: Date,
+});
+
+
+const startDate = moment().startOf('isoWeek').toDate();
                   const endDate = moment().endOf('isoWeek').toDate();
               
                   const guild = client.guilds.cache.get(DISC_GUILDID); //Figure out how to use cache to update message counts periodically if runtime is too much
@@ -69,25 +96,4 @@ module.exports = {
                       );
                     } else {
                       message.reply('User not found in the guild.');
-                    }
-                  }
-                }
-              });
-              
-
-        } catch (error) {
-            console.log(error)
-            await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder({
-                        title: `❌ ERROR OCCURED ❌`,
-                        description: "Reverting Process",
-                        color: 16711680,
-                    }),
-                ],
-            });
-        }
-    }
-}
-
-
+                    }*/
