@@ -3,9 +3,13 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { createBrowserRouter, RouterProvider, redirect } from "react-router-dom";
+
+// Components
 import ErrorPage from './error-page';
 import Home from './components/Home';
 import Login from './components/Login'
+import Dashboard from './components/Dashboard';
+import Profile from './components/Profile';
 
 const router = createBrowserRouter([
   {
@@ -14,31 +18,34 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        // Redirect user to the homepage if they go to the base url
         path: "",
-        loader: () => {
-          return redirect("/home")
-        }
-      },
-      {
-        path: "home",
         element: <Home />,
         loader: () => {
-          
+
           return null
-        }
+        },
+        children: [
+          {
+            path: "",
+            element: <Dashboard />
+          },
+          {
+            path: "profile",
+            element: <Profile />
+          }
+        ]
       },
       {
         path: "login",
         element: <Login />
       }
     ],
-},
+  },
 ])
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router}/>
+    <RouterProvider router={router} />
   </React.StrictMode>
 );

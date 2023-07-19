@@ -1,7 +1,7 @@
 const Login = () => {
     return (
         <div>
-            <a href="/auth">click here</a>
+            <a href="http://localhost:3000/auth">click here</a>
         </div>
     )
 }

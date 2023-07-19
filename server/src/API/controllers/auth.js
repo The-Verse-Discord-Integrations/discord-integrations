@@ -8,7 +8,7 @@ authRouter.get('/', passport.authenticate('discord', {
 
 authRouter.get('/redirect', passport.authenticate('discord', {
     failureRedirect: '/login',
-    successReturnToOrRedirect: '/home'
+    successReturnToOrRedirect: '/'
 }))
 
 module.exports = authRouter
