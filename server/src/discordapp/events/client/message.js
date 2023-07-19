@@ -5,7 +5,7 @@ module.exports = {
     async execute(interaction, client) {
         try {
             const member = await Member.findOne({ discordId: interaction.author.id }).populate('projects')
-
+            
             const channel = await client.channels.fetch(interaction.channelId)
 
             if (member.projects.find(project => project.categoryId === channel.parentId)) {

@@ -1,8 +1,30 @@
+import { useEffect, useState } from 'react';
+import { useNavigate, useLoaderData } from "react-router-dom";
+import axios from 'axios';
+
 const Home = () => {
-    console.log('home')
+    const [profile, setProfile] = useState(null);
+
+    let navigate = useNavigate();
+
+
+    useEffect(() => {
+        const getProfile = async () => {
+            try {
+                const response = await axios.get("/user/profile");
+                console.log(response)
+                setProfile(response.data);
+            } catch (error) {
+                if (error.response.status === '401') {
+                    navigate('/login')
+                }
+            }
+        }
+        getProfile()
+    }, [])
     return (
         <div>
-            <h1>I am the homepage</h1>
+            <h1>{profile ? profile.discordUsername : null}</h1>
         </div>
     )
 }

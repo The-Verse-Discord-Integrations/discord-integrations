@@ -1,7 +1,7 @@
 const Login = () => {
     return (
         <div>
-        Login page
+            <a href="/auth">click here</a>
         </div>
     )
 }

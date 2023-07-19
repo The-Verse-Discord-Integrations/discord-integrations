@@ -3,17 +3,14 @@ const passport = require('passport')
 const { DISC_CLIENTID, DISC_CLIENT_SECRET, DISC_CLIENT_REDIRECT } = require("../../../utils/config")
 const Member = require('../../../models/member')
 
-passport.serializeUser(function (user, done) {
+passport.serializeUser(function (id, done) {
     console.log('serializing')
-    done(null, user.discordId)
+    done(null, id)
 })
 
 passport.deserializeUser(async function (id, done) {
-    console.log('deserial')
-
-    const user = await Member.findOne({ discordId: id })
-    if (user) return done(null, user);
-    done("error")
+    console.log('deserializing')
+    done(null, id)
 })
 
 passport.use(new DiscordStrategy({
@@ -22,16 +19,5 @@ passport.use(new DiscordStrategy({
     callbackURL: DISC_CLIENT_REDIRECT,
     scope: ['identify', 'guilds']
 }, async (accessToken, refreshToken, profile, done) => {
-    try {
-        const user = await Member.findOne({ discordId: profile.id })
-
-        if (!user) {
-            
-        }
-        console.log('here')
-        done(null, user)
-    } catch (error) {
-        console.log(error)
-        done(error, null)
-    }
+    done(null, profile.id)
 })) 

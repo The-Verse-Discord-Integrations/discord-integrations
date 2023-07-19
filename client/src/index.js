@@ -23,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: "home",
         element: <Home />,
+        loader: () => {
+          
+          return null
+        }
       },
       {
         path: "login",
