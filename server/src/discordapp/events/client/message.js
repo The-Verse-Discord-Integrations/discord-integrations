@@ -17,6 +17,9 @@ module.exports = {
                 
                 member.save();
             }
+            console.log(Math.floor((interaction.createdTimestamp + 345600000) / 604800000))
+            console.log((Math.floor(interaction.createdTimestamp / 86400000) + 4) % 7)
+            console.log(new Date(interaction.createdTimestamp).getUTCDay())
         } catch (error) {
             console.log(error)
         }
