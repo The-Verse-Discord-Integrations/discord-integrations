@@ -1,7 +1,7 @@
 const Login = () => {
     return (
-        <div>
-            <a href="/auth">click here</a>
+        <div className="h-full flex items-center justify-center">
+            <a className="border border-black rounded px-3 hover:cursor-pointer" href="http://localhost:3000/auth">Login With Discord</a>
         </div>
     )
 }

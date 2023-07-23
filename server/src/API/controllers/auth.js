@@ -11,4 +11,9 @@ authRouter.get('/redirect', passport.authenticate('discord', {
     successReturnToOrRedirect: '/'
 }))
 
+authRouter.post('/logout', (request, response) => {
+    request.logout(() => {
+        response.send(200)
+    })
+})
 module.exports = authRouter

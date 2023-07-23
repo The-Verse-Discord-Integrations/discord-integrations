@@ -2,14 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import { createBrowserRouter, RouterProvider, redirect } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 // Components
 import ErrorPage from './error-page';
 import Home from './components/Home';
 import Login from './components/Login'
-import Dashboard from './components/Dashboard';
-import Profile from './components/Profile';
+import Profile from './components/profile/Profile';
 
 const router = createBrowserRouter([
   {
@@ -27,10 +26,6 @@ const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <Dashboard />
-          },
-          {
-            path: "profile",
             element: <Profile />
           }
         ]

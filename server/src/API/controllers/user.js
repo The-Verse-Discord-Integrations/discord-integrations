@@ -11,8 +11,10 @@ userRouter.get("/profile", checkAuthentication, async (request, response) => {
     // Fetching the users's avatar from the client
     const userDiscObj = await client.users.fetch(user.discordId);
     user.avatarURL = userDiscObj.avatarURL();
+
+    user.selfProfile = true;
     console.log('sending profile response')
-    
+
     return response.send(user)
 })
 
