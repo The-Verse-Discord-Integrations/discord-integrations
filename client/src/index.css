@@ -8,6 +8,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   height: 100vh;
   background-color: #F0F2F5;
+  box-sizing: border-box;
 }
 #root {
   height: 100vh;

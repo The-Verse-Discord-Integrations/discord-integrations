@@ -1,6 +1,6 @@
 const UserProjectInfo = () => {
     return (
-        <div className="container mx-auto bg-white shadow sm:rounded overflow-hidden">
+        <div className="container mx-auto bg-white shadow xl:rounded overflow-hidden">
         Tasks Container
         </div>
     )
