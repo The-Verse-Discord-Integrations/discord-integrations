@@ -4,16 +4,8 @@ const moment = require('moment');
 const mongoose = require('mongoose');
 //where am i connecting to mongodb server
 const Member = require('./member.js'); //importing user schema to get username, messages, and last messagedate, but need to update somehow?
+const messageCreateHandler = require('./messageCreateHandler');
 
-
-
-    const User = mongoose.model('User', userSchema); //Create new collection to make interactions easier
-
-    const userSchema = new mongoose.Schema({
-        username: String,
-        messages: Number,
-        lastMessageDate: Date,
-    });
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -32,33 +24,7 @@ module.exports = {
 
 
         try{
-            const startDate = moment().startOf('isoWeek').toDate();
-            const endDate = moment().endOf('isoWeek').toDate();
-        
-            const guild = client.guilds.cache.get(DISC_GUILDID); //Using cache to reduce database accesses. Figure out how to use cache to update message counts periodically if runtime is too much
-            //unnecesary checks can go around if get guild directly from instructions command
-            if (guild) {
-    
-              const member = await Member.findOne({ discordId: targetUser }) //check targetUser is a member in the server
 
-              if (!member) return await interaction.editReply("This user is not a member of the server")
-
-
-              if (member) {
-                const userMessages = await guild.channels.cache.reduce(async (accPromise, channel) => {     //fetch texts from each channel (??)
-                  const acc = await accPromise;
-                  if (channel.isText()) {   //check the channels being processed are only text channels
-                    const messages = await channel.messages.fetch({ limit: 100 }); //Staying within by API limits by rate limiting (can process 5000/10sec)
-                    const messagesFromUser = messages.filter((msg) => msg.author.id === targetUser);    //filter for only messages sent by user
-                    const messagesWithinRange = messagesFromUser.filter(
-                      (msg) =>
-                        msg.createdAt >= startDate &&
-                        msg.createdAt <= endDate
-                    );
-                    acc.push(...messagesWithinRange.array());   //push onto array
-                  }
-                  return acc;
-                }, []);
         
                 const messageCount = userMessages.length;
                 
@@ -67,6 +33,11 @@ module.exports = {
             }      
         }
         
+        /*message.guild.channels.cache.forEach(channel => {
+  channel.messages.fetch().then(messages => {
+    messages.forEach(msg => console.log(msg.content));
+  });
+}); */
 
         } catch (error) {
             console.log(error)
