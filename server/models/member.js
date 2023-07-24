@@ -41,6 +41,11 @@ const memberSchema = new mongoose.Schema({
     ],
     weeklyHours: {
         type: Number
+    },
+    messageCount: {
+        type: Map,
+        of: mongoose.Schema.Types.Mixed,
+        default: {}
     }
 });
 
