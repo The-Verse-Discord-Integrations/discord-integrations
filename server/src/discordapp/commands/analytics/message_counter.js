@@ -1,10 +1,7 @@
 const Discord = require('discord.js');
 const { ChannelType, SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const moment = require('moment');
-const mongoose = require('mongoose');
-//where am i connecting to mongodb server
 const Member = require('./member.js'); //importing user schema to get username, messages, and last messagedate, but need to update somehow?
-const messageCreateHandler = require('./messageCreateHandler');
+const Project = require('../../../../models/project');
 
 
 module.exports = {
@@ -18,15 +15,16 @@ module.exports = {
         if (!interaction.options.getBoolean("confirmation")) return await interaction.reply({ content: "Please confirm command", ephemeral: true })
         await interaction.deferReply({ ephemeral: true })
             
-        const client = new Discord.Client();  //Handle events
         const targetUser = interaction.options.getUser('user').id
 
 
 
         try{
 
+
+
         
-                const messageCount = userMessages.length;
+                const messageCount = Member.weeklyMessageCount;
                 
                 await interaction.editReply(`<@${targetUser}> has sent ${messageCount} messages this week.`)
                                         
