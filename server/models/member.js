@@ -42,14 +42,11 @@ const memberSchema = new mongoose.Schema({
     weeklyHours: {
         type: Number
     },
-    weeklyMessageCount: {
-        type: Number
-    },
-    weeklyMessageCountCollection: [
-        {
-            type: Number,
-        }
-    ]
+    messageCount: {
+        type: Map,
+        of: mongoose.Schema.Types.Mixed,
+        default: {}
+    }
 });
 
 memberSchema.set("toJSON", {
