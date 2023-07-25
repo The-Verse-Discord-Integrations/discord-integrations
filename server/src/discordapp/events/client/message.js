@@ -17,17 +17,24 @@ module.exports = {
             const channel = await client.channels.fetch(interaction.channelId)  //needed?
 
             
-
+            //checking edge case if member is in server during slashcommand function
             
             
             //checking if new week key needs to be created or same week
-            if(!member.messageCount.hashMapKey.find(hashMapKey => messageCount.hashMapKey === hashMapKey)){
+            if (!member.messageCount.hasOwnProperty(hashMapKey)) {
+                member.messageCount[hashMapKey] = {
+                  dayCount: new Array(6).fill(0),
+                  weeklyMessageCount: 1,
+                };
+           
+/* Other option incase previous function does not successfully create a hashmap
                 const messageCount = {
                     hashMapKey: { //dont know if this function gives hashmapkey's value as name for hashmap
                       dayCount: new Array(6).fill(0),
                       weeklyMessageCount: 1,
                     },
-                  };
+*/ 
+                  
                 member.messageCount.hashMapKey.dayCount[dayIndex]++;
                 member.messageCount.hashMapKey.weeklyMessageCount++;
 
@@ -38,7 +45,7 @@ module.exports = {
 
             member.save();
 
-         /*   OLD IMPLENTATION::
+         /*   OLD DINO IMPLENTATION::
          if (member.projects.find(project => project.categoryId === channel.parentId)) {
                 // Check to see if the message count is set for the user, if it is then increase the count.
                 if (!member.weeklyMessageCount) {
