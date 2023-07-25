@@ -15,6 +15,9 @@ const ProfileInfo = ({ profile, setShowEditProfile }) => {
                     <div>
                         {profile.selfProfile ? <button onClick={() => {setShowEditProfile(true)}} className="border border-black">Edit profile</button> : null}
                     </div>
+                    <div>
+                        hello
+                    </div>
                 </div>
             </div>
         </div>
