@@ -38,11 +38,15 @@ module.exports = {
 
             // Increment the totalCount for the week and increment the count in the corresponding index in the dailyCount array
             else {
-                const newTotalCount = member.weeklyMessageCount.get(hashMapKey).get('totalCount') + 1;
-                const currDailyArray = member.weeklyMessageCount.get(hashMapKey).get('dailyCount');
-                currDailyArray[dailyIndex]++;
-                
-                member.weeklyMessageCount.get(hashMapKey).set('totalCount', newTotalCount)
+
+                const map = new Map();
+                map.set('totalCount', member.weeklyMessageCount.get(hashMapKey).get('totalCount') + 1)
+                const newArray = member.weeklyMessageCount.get(hashMapKey).get('dailyCount')
+                newArray[dailyIndex]++
+                map.set('dailyCount', newArray)
+
+                member.weeklyMessageCount.set(hashMapKey, map)
+
             }
             console.log(member.weeklyMessageCount)
             return await member.save()
