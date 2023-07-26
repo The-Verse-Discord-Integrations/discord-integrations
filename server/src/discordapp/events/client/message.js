@@ -1,4 +1,5 @@
 const Member = require('../../../../models/member')
+const cloneUtility = require('lodash');
 
 module.exports = {
     name: 'messageCreate',
@@ -6,61 +7,45 @@ module.exports = {
 
     async execute(interaction, client) {
         try {
+            const hashMapKey = (Math.floor((interaction.createdTimestamp + 345600000) / 604800000)).toString() //Hashmap key represents week count
+            const dailyIndex = new Date(interaction.createdTimestamp).getUTCDay() //hashmap subkey is array with 7 indexes, each corresponding to day of the week
+            const weeklyMessageCount = 0;
 
-
-            const hashMapKey = (Math.floor((interaction.createdTimestamp + 345600000) / 604800000)) //Hashmap key represents week count
-            const dayIndex = new Date(interaction.createdTimestamp).getUTCDay() //hashmap subkey is array with 7 indexes, each corresponding to day of the week
-            const weeklyMessageCount = 0;  
-
-            const member = await Member.findOne({ discordId: interaction.author.id }).populate('projects').populate(messageCount)
+            const member = await Member.findOne({ discordId: interaction.author.id }).populate('projects')
+            if (!member) return
 
             const channel = await client.channels.fetch(interaction.channelId)  //needed?
 
-            
-            //checking edge case if member is in server during slashcommand function
-            
-            
-            //checking if new week key needs to be created or same week
-            if (!member.messageCount.hasOwnProperty(hashMapKey)) {
-                member.messageCount[hashMapKey] = {
-                  dayCount: new Array(6).fill(0),
-                  weeklyMessageCount: 1,
-                };
-           
-/* Other option incase previous function does not successfully create a hashmap
-                const messageCount = {
-                    hashMapKey: { //dont know if this function gives hashmapkey's value as name for hashmap
-                      dayCount: new Array(6).fill(0),
-                      weeklyMessageCount: 1,
-                    },
-*/ 
-                  
-                member.messageCount.hashMapKey.dayCount[dayIndex]++;
-                member.messageCount.hashMapKey.weeklyMessageCount++;
-
-            } else {
-                member.messageCount.hashMapKey.dayCount[dayIndex]++;
-                member.messageCount.hashMapKey.weeklyMessageCount++;
+            // If they don't have the hashmap data structure yet implement it
+            if (!member.weeklyMessageCount) {
+                const weeklyMessageCountMap = new Map();
+                member.weeklyMessageCount = weeklyMessageCountMap
             }
 
-            member.save();
+            // If they don't have the current week as a key in the hashmap create it
+            if (!member.weeklyMessageCount.has(hashMapKey)) {
+                const intraWeeklyMessageCountMap = new Map();
 
-         /*   OLD DINO IMPLENTATION::
-         if (member.projects.find(project => project.categoryId === channel.parentId)) {
-                // Check to see if the message count is set for the user, if it is then increase the count.
-                if (!member.weeklyMessageCount) {
-                    member.weeklyMessageCount = 1;
-                }
-                member.weeklyMessageCount += 1;
+                intraWeeklyMessageCountMap.set('totalCount', 1);
+
+                const dailyCountArray = new Array(7).fill(0);
+                dailyCountArray[dailyIndex]++;
+                intraWeeklyMessageCountMap.set('dailyCount', dailyCountArray)
+
+                member.weeklyMessageCount.set(hashMapKey, intraWeeklyMessageCountMap)
+
+            } 
+
+            // Increment the totalCount for the week and increment the count in the corresponding index in the dailyCount array
+            else {
+                const newTotalCount = member.weeklyMessageCount.get(hashMapKey).get('totalCount') + 1;
+                const currDailyArray = member.weeklyMessageCount.get(hashMapKey).get('dailyCount');
+                currDailyArray[dailyIndex]++;
                 
-                member.save();
+                member.weeklyMessageCount.get(hashMapKey).set('totalCount', newTotalCount)
             }
-            console.log(Math.floor((interaction.createdTimestamp + 345600000) / 604800000))
-            console.log((Math.floor(interaction.createdTimestamp / 86400000) + 4) % 7)
-            console.log(new Date(interaction.createdTimestamp).getUTCDay())
-
-        */
-
+            console.log(member.weeklyMessageCount)
+            return await member.save()
         } catch (error) {
             console.log(error)
         }
