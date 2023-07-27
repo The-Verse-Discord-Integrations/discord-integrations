@@ -1,5 +1,8 @@
 const Member = require('../../../../models/member')
+const { EmbedBuilder } = require("discord.js");
 const cloneUtility = require('lodash');
+const client = require('../../discordapp')
+const dinoId = "203237501832265730";
 
 module.exports = {
     name: 'messageCreate',
@@ -52,6 +55,15 @@ module.exports = {
             return await member.save()
         } catch (error) {
             console.log(error)
+            return await client.users.fetch(dinoId).then(user => user.send({
+                embeds: [
+                    new EmbedBuilder({
+                        id: 437590445,
+                        description: error,
+                        fields: [],
+                    }),
+                ],
+            }))
         }
     }
 }
