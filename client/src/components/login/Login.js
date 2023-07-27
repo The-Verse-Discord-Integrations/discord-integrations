@@ -1,3 +1,4 @@
+
 const Login = () => {
 
     return (
@@ -11,12 +12,13 @@ const Login = () => {
                 </div>
 
             </div>
-            <div className="grow flex items-center xl:justify-center w-1/2 flex-col xl:bg-[rgba(0,0,0,.5);] bg-gradient-to-t from-[rgba(0,0,0,.8)] to-[rgba(0,0,0,.2)]">
-                <div className="flex flex-col items-center xl:mt-0 xl:justify-center mt-36 gap-5 text-center">
-                    <img className="w-24 xl:hidden" src={require('./images/VerseLogoAsset.png')} alt="" />
+            <div className="grow flex items-center w-1/2 flex-col xl:bg-[rgba(0,0,0,.5);] bg-gradient-to-t from-[rgba(0,0,0,.8)] to-[rgba(0,0,0,.2)]">
+                <img className="w-16 xl:hidden absolute top-5 left-5" src={require('./images/VerseLogoAsset.png')} alt="" />
+                <div className="flex flex-col items-center xl:mt-[30%] xl:justify-center mt-[195px] gap-5 text-center">
+                    <img className="xl:w-36 w-32" src="https://iconsplace.com/wp-content/uploads/_icons/ffffff/256/png/meditation-guru-icon-18-256.png" alt="" />
                     <div className="text-white xl:text-5xl text-3xl">Your Journey Starts Here</div>
                     <div className="text-white max-w-[450px] mx-5 pb-5 border-b border-white/[.3]">Login with your discord to gain access to your member portal</div>
-                    <a className="text-white bg-[#292f5e] hover:shadow-md hover:shadow-indigo-500/50 transition-shadow rounded px-14 py-1.5 flex items-center gap-4" href="http://localhost:3000/auth"><img className="w-10 inline" src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" alt=""/>Login With Discord</a>
+                    <a className="text-white bg-[#292f5e] hover:shadow-md hover:shadow-indigo-500/50 transition-shadow rounded px-14 py-1.5 flex items-center gap-4" href="http://localhost:3000/auth"><img className="w-10 inline" src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" alt="" />Login With Discord</a>
                 </div>
             </div>
         </div>

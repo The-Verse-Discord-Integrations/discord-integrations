@@ -8,6 +8,7 @@ import ProfileInfo from './ProfileInfo';
 const Profile = () => {
     const profile = useContext(UserContext)
     const [showEditProfile, setShowEditProfile] = useState(false)
+    console.log(profile)
     return (
         <div className="shadow-inner h-full flex flex-col xl:gap-y-3 relative">
             {profile ?
