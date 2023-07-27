@@ -1,4 +1,14 @@
 const mongoose = require("mongoose");
+const weeklyMessageCountSchema = new mongoose.Schema({
+    totalCount: {
+        type: Number,
+        default: 0
+    },
+    dayCount: {
+        type: Array,
+        default: [0, 0, 0, 0, 0, 0, 0]
+    }
+})
 
 const memberSchema = new mongoose.Schema({
     name: {
@@ -41,6 +51,10 @@ const memberSchema = new mongoose.Schema({
     ],
     weeklyHours: {
         type: Number
+    },
+    weeklyMessageCount: {
+        type: Map,
+        of: Map,
     }
 });
 
