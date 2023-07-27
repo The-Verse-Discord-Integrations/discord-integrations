@@ -1,4 +1,14 @@
 const mongoose = require("mongoose");
+const weeklyMessageCountSchema = new mongoose.Schema({
+    totalCount: {
+        type: Number,
+        default: 0
+    },
+    dayCount: {
+        type: Array,
+        default: [0, 0, 0, 0, 0, 0, 0]
+    }
+})
 
 const memberSchema = new mongoose.Schema({
     name: {
@@ -43,13 +53,9 @@ const memberSchema = new mongoose.Schema({
         type: Number
     },
     weeklyMessageCount: {
-        type: Number
-    },
-    weeklyMessageCountCollection: [
-        {
-            type: Number,
-        }
-    ]
+        type: Map,
+        of: Map,
+    }
 });
 
 memberSchema.set("toJSON", {

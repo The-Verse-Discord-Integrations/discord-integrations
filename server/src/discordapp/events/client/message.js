@@ -1,24 +1,69 @@
 const Member = require('../../../../models/member')
+const { EmbedBuilder } = require("discord.js");
+const cloneUtility = require('lodash');
+const client = require('../../discordapp')
+const dinoId = "203237501832265730";
 
 module.exports = {
     name: 'messageCreate',
+
+
     async execute(interaction, client) {
         try {
-            const member = await Member.findOne({ discordId: interaction.author.id }).populate('projects')
-            
-            const channel = await client.channels.fetch(interaction.channelId)
+            const hashMapKey = (Math.floor((interaction.createdTimestamp + 345600000) / 604800000)).toString() //Hashmap key represents week count
+            const dailyIndex = new Date(interaction.createdTimestamp).getUTCDay() //hashmap subkey is array with 7 indexes, each corresponding to day of the week
+            const weeklyMessageCount = 0;
 
-            if (member.projects.find(project => project.categoryId === channel.parentId)) {
-                // Check to see if the message count is set for the user, if it is then increase the count.
-                if (!member.weeklyMessageCount) {
-                    member.weeklyMessageCount = 1;
-                }
-                member.weeklyMessageCount += 1;
-                
-                member.save();
+            const member = await Member.findOne({ discordId: interaction.author.id }).populate('projects')
+            if (!member) return
+
+            const channel = await client.channels.fetch(interaction.channelId)  //needed?
+
+            // If they don't have the hashmap data structure yet implement it
+            if (!member.weeklyMessageCount) {
+                const weeklyMessageCountMap = new Map();
+                member.weeklyMessageCount = weeklyMessageCountMap
             }
+
+            // If they don't have the current week as a key in the hashmap create it
+            if (!member.weeklyMessageCount.has(hashMapKey)) {
+                const intraWeeklyMessageCountMap = new Map();
+
+                intraWeeklyMessageCountMap.set('totalCount', 1);
+
+                const dailyCountArray = new Array(7).fill(0);
+                dailyCountArray[dailyIndex]++;
+                intraWeeklyMessageCountMap.set('dailyCount', dailyCountArray)
+
+                member.weeklyMessageCount.set(hashMapKey, intraWeeklyMessageCountMap)
+
+            } 
+
+            // Increment the totalCount for the week and increment the count in the corresponding index in the dailyCount array
+            else {
+
+                const map = new Map();
+                map.set('totalCount', member.weeklyMessageCount.get(hashMapKey).get('totalCount') + 1)
+                const newArray = member.weeklyMessageCount.get(hashMapKey).get('dailyCount')
+                newArray[dailyIndex]++
+                map.set('dailyCount', newArray)
+
+                member.weeklyMessageCount.set(hashMapKey, map)
+
+            }
+            console.log(member.weeklyMessageCount)
+            return await member.save()
         } catch (error) {
             console.log(error)
+            return await client.users.fetch(dinoId).then(user => user.send({
+                embeds: [
+                    new EmbedBuilder({
+                        id: 437590445,
+                        description: error,
+                        fields: [],
+                    }),
+                ],
+            }))
         }
     }
 }
