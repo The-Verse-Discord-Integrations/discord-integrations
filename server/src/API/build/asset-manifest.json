@@ -1,13 +1,14 @@
 {
   "files": {
-    "main.css": "/static/css/main.54fe8ca2.css",
-    "main.js": "/static/js/main.c24aec68.js",
+    "main.css": "/static/css/main.c7ec5a58.css",
+    "main.js": "/static/js/main.9de1503e.js",
+    "static/media/VerseLogoAsset.png": "/static/media/VerseLogoAsset.c30e46a66c3d661093f5.png",
     "index.html": "/index.html",
-    "main.54fe8ca2.css.map": "/static/css/main.54fe8ca2.css.map",
-    "main.c24aec68.js.map": "/static/js/main.c24aec68.js.map"
+    "main.c7ec5a58.css.map": "/static/css/main.c7ec5a58.css.map",
+    "main.9de1503e.js.map": "/static/js/main.9de1503e.js.map"
   },
   "entrypoints": [
-    "static/css/main.54fe8ca2.css",
-    "static/js/main.c24aec68.js"
+    "static/css/main.c7ec5a58.css",
+    "static/js/main.9de1503e.js"
   ]
 }

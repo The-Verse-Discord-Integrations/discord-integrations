@@ -13,8 +13,14 @@ userRouter.get("/profile", checkAuthentication, async (request, response) => {
     user.avatarURL = userDiscObj.avatarURL();
 
     user.selfProfile = true;
-    console.log('sending profile response')
 
+    let weeklyMessageCountArray = Array.from(user.weeklyMessageCount.entries())
+    weeklyMessageCountArray = weeklyMessageCountArray.map(array => {
+        const newArray = Array.from(array[1].values())
+        return [array[0], newArray[0], newArray[1]]
+    })
+   
+    user.weeklyMessageCountArray = weeklyMessageCountArray
     return response.send(user)
 })
 
