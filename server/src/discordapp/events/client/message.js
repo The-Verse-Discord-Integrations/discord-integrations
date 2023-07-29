@@ -27,6 +27,26 @@ module.exports = {
 
             // If they don't have the current week as a key in the hashmap create it
             if (!member.weeklyMessageCount.has(hashMapKey)) {
+                // Check if there are any missing weeks where the user did not send a message
+                // We will find the last week the user sent a message and find the offset to the current week.
+                // We will then create a hashmapkey for those empty weeks with a totalCount of 0 for each.
+                const currentMessageCountArray = Array.from(member.weeklyMessageCount.keys())
+                const lastWeekHashMapKey = parseInt(currentMessageCountArray[currentMessageCountArray.length - 1])
+
+                let offset = parseInt(hashMapKey) - lastWeekHashMapKey
+                offset = offset ? offset : 0
+
+                if (offset > 1) {
+                    for (let i = 1; i < offset; i++) {
+                        const intraWeeklyMessageCountMap = new Map();
+                        intraWeeklyMessageCountMap.set('totalCount', 0);
+                        const dailyCountArray = new Array(7).fill(0);
+                        intraWeeklyMessageCountMap.set('dailyCount', dailyCountArray)
+                        member.weeklyMessageCount.set((lastWeekHashMapKey + i).toString(), intraWeeklyMessageCountMap)
+                    }
+                }
+
+                // If it is a new week create the new hashMap 
                 const intraWeeklyMessageCountMap = new Map();
 
                 intraWeeklyMessageCountMap.set('totalCount', 1);
@@ -41,7 +61,6 @@ module.exports = {
 
             // Increment the totalCount for the week and increment the count in the corresponding index in the dailyCount array
             else {
-
                 const map = new Map();
                 map.set('totalCount', member.weeklyMessageCount.get(hashMapKey).get('totalCount') + 1)
                 const newArray = member.weeklyMessageCount.get(hashMapKey).get('dailyCount')
