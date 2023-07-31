@@ -13,7 +13,7 @@ ChartJS.register(
 const UserStats = ({ profile }) => {
 
     return (
-        <div className="container relative mx-auto bg-white border-b border-slate-100 xl:shadow xl:rounded flex xl:flex-row flex-col justify-center w-full py-10 pr-10 pl-5">
+        <div className="container relative mx-auto bg-white xl:border-b-0 border-b border-slate-100 xl:shadow xl:rounded flex xl:flex-row flex-col justify-center w-full py-10 pr-10 pl-5">
             <WeeklyBarChart profile={profile}/>
         </div>
     )
