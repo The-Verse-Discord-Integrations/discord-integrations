@@ -13,7 +13,7 @@ ChartJS.register(
 const UserStats = ({ profile }) => {
 
     return (
-        <div className="container relative mx-auto bg-white border-b border-slate-100 xl:shadow xl:rounded flex xl:flex-row flex-col justify-center w-full h-max">
+        <div className="container relative mx-auto bg-white border-b border-slate-100 xl:shadow xl:rounded flex xl:flex-row flex-col justify-center w-full py-10 pr-10 pl-5">
             <WeeklyBarChart profile={profile}/>
         </div>
     )
@@ -23,16 +23,28 @@ const WeeklyBarChart = ({profile}) => {
     const options = {
         responsive: true,
         aspectRatio: 1 | 2,
-
         plugins: {
             legend: {
                 position: 'top',
-            },
-            title: {
-                display: true,
-                text: `${profile.name} message chart`,
+                display: false
             },
         },
+        scales: {
+            x: {
+                grid: {
+                    drawOnChartArea: false
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: "Messages",
+                    font: {
+                        size: 24
+                    }
+                }
+            }
+        }
     };
 
     const labels = []
@@ -55,9 +67,9 @@ const WeeklyBarChart = ({profile}) => {
         labels: labels,
         datasets: [
             {
-                label: 'Dataset 1',
+                label: 'Messages',
                 data: messageDataFormatted,
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                backgroundColor: 'rgba(253, 218, 216, 1)',
             },
         ],
     };
