@@ -34,7 +34,7 @@ module.exports = {
     async execute(interaction, client) {
         try {
             // Calculate the week number to be used as the key for the weeklyMessageCount map
-            const hashMapKey = (Math.floor((interaction.createdTimestamp + 345600000) / 604800000) + 10).toString()
+            const hashMapKey = (Math.floor((interaction.createdTimestamp + 345600000) / 604800000)).toString()
 
             // Get the day index (0-6) for the received message (0: Sunday, 1: Monday, ..., 6: Saturday)
             const dailyIndex = new Date(interaction.createdTimestamp).getUTCDay()
