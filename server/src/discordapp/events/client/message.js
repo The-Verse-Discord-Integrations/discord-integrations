@@ -37,7 +37,7 @@ module.exports = {
             const hashMapKey = (Math.floor((interaction.createdTimestamp + 345600000) / 604800000)).toString()
 
             // Get the day index (0-6) for the received message (0: Sunday, 1: Monday, ..., 6: Saturday)
-            const dailyIndex = new Date(interaction.createdTimestamp).getUTCDay()
+            const dailyIndex = new Date(interaction.createdTimestamp).getUTCDay();
 
             // Find the member's data in the MongoDB database based on their Discord ID
             const member = await Member.findOne({ discordId: interaction.author.id }).populate('projects')

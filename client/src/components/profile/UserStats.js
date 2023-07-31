@@ -11,8 +11,19 @@ ChartJS.register(
 );
 
 const UserStats = ({ profile }) => {
+
+    return (
+        <div className="container relative mx-auto bg-white border-b border-slate-100 xl:shadow xl:rounded flex xl:flex-row flex-col justify-center w-full h-max">
+            <WeeklyBarChart profile={profile}/>
+        </div>
+    )
+}
+
+const WeeklyBarChart = ({profile}) => {
     const options = {
         responsive: true,
+        aspectRatio: 1 | 2,
+
         plugins: {
             legend: {
                 position: 'top',
@@ -27,17 +38,16 @@ const UserStats = ({ profile }) => {
     const labels = []
     const messageData = profile.weeklyMessageCountArray
     const messageDataFormatted = []
+    const currentWeekNum = parseInt(messageData[messageData.length - 1][0])
 
-    if (messageData) {
-        for (let i = 0; i < 12; i++) {
-            const index = messageData.length - 1 - i
-            if (messageData[index]) {
-                labels.unshift(messageData[index][0])
-                messageDataFormatted.unshift(messageData[index][1])
-            } else {
-                labels.unshift('')
-                messageDataFormatted.unshift(0)
-            }
+    for (let i = 0; i < 12; i++) {
+        const index = messageData.length - 1 - i
+        if (messageData[index]) {
+            labels.unshift(getWeekString(messageData[index][0]))
+            messageDataFormatted.unshift(messageData[index][1])
+        } else {
+            labels.unshift(getWeekString(currentWeekNum - i))
+            messageDataFormatted.unshift(0)
         }
     }
 
@@ -52,11 +62,17 @@ const UserStats = ({ profile }) => {
         ],
     };
 
-    return (
-        <div className="container mx-auto bg-white shadow xl:rounded overflow-hidden flex justify-center">
-            {messageData ? <Bar options={options} data={data} /> : <div>User currently has no message data</div>}
-        </div>
-    )
+    return <Bar options={options} data={data} />
+}
+
+const getWeekString = (unixWeek) => {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    unixWeek = parseInt(unixWeek)
+
+    const weekStart = new Date((unixWeek * 604800000) - 259200000)
+    const weekEnd = new Date(weekStart.getTime() + 518400000)
+
+    return `${months[weekStart.getMonth()]} ${weekStart.getDate()} - ${months[weekEnd.getMonth()]} ${weekEnd.getDate()}`
 }
 
 export default UserStats

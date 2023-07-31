@@ -35,11 +35,20 @@ userRouter.get("/profile", checkAuthentication, async (request, response) => {
 module.exports = userRouter
 
 const adjustForMessageOffset = async (user) => {
-    if (!user.weeklyMessageCount) {
-        console.log('no user weeklyMessageCount')
-        return user
-    }
     const currentWeekHashMapKey = (Math.floor((Date.now() + 345600000) / 604800000))
+
+    if (!user.weeklyMessageCount) {
+        user.weeklyMessageCount = new Map();
+        const intraWeeklyMessageCountMap = new Map();
+        intraWeeklyMessageCountMap.set('totalCount', 0);
+        const dailyCountArray = new Array(7).fill(0);
+        intraWeeklyMessageCountMap.set('dailyCount', dailyCountArray)
+        user.weeklyMessageCount.set((currentWeekHashMapKey).toString(), intraWeeklyMessageCountMap)
+
+        return await user.save()
+    }
+
+
     const currentMessageCountArray = Array.from(user.weeklyMessageCount.keys())
     const lastWeekHashMapKey = parseInt(currentMessageCountArray[currentMessageCountArray.length - 1])
     const offset = currentWeekHashMapKey - lastWeekHashMapKey
