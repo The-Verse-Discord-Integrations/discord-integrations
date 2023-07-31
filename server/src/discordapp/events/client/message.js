@@ -105,7 +105,6 @@ module.exports = {
                 map.set('dailyCount', newArray)
 
                 member.weeklyMessageCount.set(hashMapKey, map)
-
             }
             console.log(member.weeklyMessageCount)
             return await member.save()
