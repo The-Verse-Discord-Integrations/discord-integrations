@@ -25,17 +25,14 @@ module.exports = {
 
         
                 const messageCount = Member.weeklyMessageCount;
-                
+                messageCount = 
+
                 await interaction.editReply(`<@${targetUser}> has sent ${messageCount} messages this week.`)
                                         
             }      
         }
         
-        /*message.guild.channels.cache.forEach(channel => {
-  channel.messages.fetch().then(messages => {
-    messages.forEach(msg => console.log(msg.content));
-  });
-}); */
+
 
         } catch (error) {
             console.log(error)
