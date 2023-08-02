@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const { ChannelType, SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const Member = require('./member.js'); //importing user schema to get username, messages, and last messagedate, but need to update somehow?
+const Member = require('../../../../models/member'); //importing user schema to get username, messages, and last messagedate, but need to update somehow?
 const Project = require('../../../../models/project');
 
 
@@ -18,16 +18,25 @@ module.exports = {
         const inputUser = interaction.options.getUser('user').id
         const currDay = new Date(interaction.createdTimestamp).getUTCDay();
         const currWeek = (Math.floor((interaction.createdTimestamp + 345600000) / 604800000)).toString();
+
+        console.log(currDay);
+        console.log(currWeek);
         
         try{
             
             //Find inputUser's member profile
-            const targetUser = await Member.findOne({ discordId: inputUser }).populate(weeklyMessageCount)
+            const targetUser = await Member.findOne({ discordId: inputUser }).populate('weeklyMessageCount')
             
             //Edge case if targetUser does not have a user profile
             if (!targetUser) return await interaction.editReply("This user has yet to create a profile")
+
+            // Check if the current week exists in the weeklyMessageCount object
+            if (!targetUser.weeklyMessageCount[currWeek]) {
+            return await interaction.editReply(`<@${targetUser}> has not sent any messages this week.`);
+            }
+            //ERROR!!! if i take away total count it says i havent sent any messages this week. but week count is correct
             
-            const currWeekCount = targetUser.weeklyMessageCount.currWeek.totalCount;
+            const currWeekCount = targetUser.weeklyMessageCount[currWeek].totalCount;
             const currDayCount = targetUser.weeklyMessageCount[currWeek].dailyCount[currDay];
 
         await interaction.editReply(`<@${targetUser}> has sent ${currDayCount} messages today, with a total of ${currWeekCount} messages this week.`)
