@@ -31,8 +31,8 @@ module.exports = {
             if (!targetUser) return await interaction.editReply("This user has yet to create a profile")
 
             //Check if the current week exists in the user's weeklyMessageCount object
-            if (!targetUser.weeklyMessageCount[currWeek]) {
-            return await interaction.editReply(`<@${targetUser}> has not sent any messages this week.`);
+            if (!targetUser.weeklyMessageCount.has(currWeek)) {
+            return await interaction.editReply(`<@${inputUser}> has not sent any messages this week.`);
             }
             
             //Get message counts for week and current day 
