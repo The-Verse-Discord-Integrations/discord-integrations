@@ -2,8 +2,11 @@ const ProfileInfo = ({ profile, setShowEditProfile }) => {
     const rolesLength = profile ? profile.roles.length : null;
     const projectsLength = profile ? profile.projects.length : null;
     const skillsLength = profile ? profile.skills.length : null;
-    const startDate = profile.startDate.slice(0, -14)
-    const endDate = profile.endDate.slice(0, -14)
+    const startDate = new Date(profile.startDate.slice(0, -14))
+    const endDate = new Date(profile.endDate.slice(0, -14))
+
+    const startDisplayDate = `${startDate.toLocaleString('default', { month: 'long' })} ${startDate.getFullYear()}`;
+    const endDisplayDate = `${endDate.toLocaleString('default', { month: 'long' })} ${endDate.getFullYear()}`;
 
 
     return (
@@ -23,7 +26,7 @@ const ProfileInfo = ({ profile, setShowEditProfile }) => {
                     </div>
                     <div className="flex items-center space-x-1">
                         <img className="w-5 h-5" src={require('./images/clock.png')} alt="" />
-                        <div>{profile.weeklyHours}hrs/week • {startDate} to {endDate}</div>
+                        <div>{startDisplayDate} - {endDisplayDate} • {profile.weeklyHours}hr/week</div>
                     </div>
 
                     <div className="flex items-center space-x-1">
@@ -45,7 +48,7 @@ const ProfileInfo = ({ profile, setShowEditProfile }) => {
                     {/*    })}*/}
                     {/*</div>*/}
 
-                    <div className="border-y-4 pt-1 pb-4 mt-1 mb-2 text-sm">
+                    <div className="border-y-2 pt-1 pb-4 mt-1 mb-2 text-sm">
                         <h1 className="text-lg font-semibold mb-3">Skills</h1>
                         {profile.skills.map((skill, index) => {
                             return <span key={skill} className="border rounded-xl p-2 mr-1">{skill}</span>
