@@ -16,11 +16,11 @@ module.exports = {
         await interaction.deferReply({ ephemeral: true })
             
         const inputUser = interaction.options.getUser('user').id
+        //Find the day and week references that the slash command was sent
         const currDay = new Date(interaction.createdTimestamp).getUTCDay();
         const currWeek = (Math.floor((interaction.createdTimestamp + 345600000) / 604800000)).toString();
 
-        console.log(currDay);
-        console.log(currWeek);
+
         
         try{
             
@@ -30,16 +30,16 @@ module.exports = {
             //Edge case if targetUser does not have a user profile
             if (!targetUser) return await interaction.editReply("This user has yet to create a profile")
 
-            // Unnecesary but using as test case. Check if the current week exists in the weeklyMessageCount object
+            //Check if the current week exists in the user's weeklyMessageCount object
             if (!targetUser.weeklyMessageCount[currWeek]) {
             return await interaction.editReply(`<@${targetUser}> has not sent any messages this week.`);
             }
-            //ERROR!!! if i take away total count it says i havent sent any messages this week. but week count is correct
             
+            //Get message counts for week and current day 
             const currWeekCount = targetUser.weeklyMessageCount.get(currWeek).get('totalCount');
             const currDayCount = targetUser.weeklyMessageCount.get(currWeek).get('dailyCount')[currDay];
 
-        await interaction.editReply(`<@${targetUser}> has sent ${currDayCount} messages today, with a total of ${currWeekCount} messages this week.`)
+        await interaction.editReply(`<@${inputUser}> has sent ${currDayCount} messages today, with a total of ${currWeekCount} messages this week.`)
                                              
 
         
