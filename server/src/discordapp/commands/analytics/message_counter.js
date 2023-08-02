@@ -16,19 +16,19 @@ module.exports = {
         await interaction.deferReply({ ephemeral: true })
             
         const inputUser = interaction.options.getUser('user').id
-
-        try{
-
-        //Find inputUser's member profile
-        const targetUser = await Member.findOne({ discordId: inputUser }).populate(weeklyMessageCount)
-
-        //Edge case if targetUser does not have a user profile
-        if (!targetUser) return await interaction.editReply("This user has yet to create a profile")
-
         const currDay = new Date(interaction.createdTimestamp).getUTCDay();
         const currWeek = (Math.floor((interaction.createdTimestamp + 345600000) / 604800000)).toString();
-        const currWeekCount = targetUser.weeklyMessageCount.currWeek.totalCount;
-        const currDayCount = targetUser.weeklyMessageCount[currWeek].dailyCount[currDay];
+        
+        try{
+            
+            //Find inputUser's member profile
+            const targetUser = await Member.findOne({ discordId: inputUser }).populate(weeklyMessageCount)
+            
+            //Edge case if targetUser does not have a user profile
+            if (!targetUser) return await interaction.editReply("This user has yet to create a profile")
+            
+            const currWeekCount = targetUser.weeklyMessageCount.currWeek.totalCount;
+            const currDayCount = targetUser.weeklyMessageCount[currWeek].dailyCount[currDay];
 
         await interaction.editReply(`<@${targetUser}> has sent ${currDayCount} messages today, with a total of ${currWeekCount} messages this week.`)
                                              
