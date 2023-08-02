@@ -58,8 +58,6 @@ const ProfileInfo = ({ profile, setShowEditProfile }) => {
                     <div>
                         {profile.selfProfile ? <button onClick={() => {setShowEditProfile(true)}} className="bg-blue-600 hover:bg-blue-500 rounded-xl p-2 text-white font-semibold">Edit profile</button> : null}
                     </div>
-
-
                 </div>
 
             </div>
