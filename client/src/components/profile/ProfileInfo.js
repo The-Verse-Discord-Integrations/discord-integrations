@@ -35,7 +35,7 @@ const ProfileInfo = ({ profile, setShowEditProfile }) => {
                     </div>
 
                     {profile.github && profile.github.trim() !== "" && (
-                        <a href={`https://github.com/${profile.github}`} target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 hover:underline text-slate-300">
+                        <a href={`https://github.com/${profile.github}`} target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 hover:underline text-slate-300 py-1">
                             <div className="flex items-center space-x-1">
                                 <img className="w-5 h-5" src={require('./images/githubLogo.png')} alt="" />
                                 <div>{profile.github}</div>

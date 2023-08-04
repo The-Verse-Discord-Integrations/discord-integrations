@@ -103,7 +103,7 @@ const BarChart = ({ profile, windowOffset, windowWidth, showWeek }) => {
     
     const weeklyChartData = getWeeklyChartData(profile, windowOffset, windowWidth)
     const dailyChartData = getDailyChartData(profile, windowOffset, windowWidth)
-    return <Bar options={options} data={showWeek ? weeklyChartData : dailyChartData} />
+    return <Bar options={options} data={showWeek ? weeklyChartData : dailyChartData}/>
 }
 
 const getWeeklyChartData = (profile, windowOffset, windowWidth) => {
