@@ -51,12 +51,12 @@ const ProfileInfo = ({ profile, setShowEditProfile }) => {
                     <div className="border-y-2 pt-1 pb-4 mt-1 mb-2 text-sm">
                         <h1 className="text-lg font-semibold mb-3">Skills</h1>
                         {profile.skills.map((skill, index) => {
-                            return <span key={skill} className="border rounded-xl p-2 mr-1">{skill}</span>
+                            return <span key={skill} className="border-2 rounded-xl p-2 mr-1">{skill}</span>
                         })}
                     </div>
 
                     <div>
-                        {profile.selfProfile ? <button onClick={() => {setShowEditProfile(true)}} className="bg-blue-600 hover:bg-blue-500 rounded-xl p-2 text-white font-semibold">Edit profile</button> : null}
+                        {profile.selfProfile ? <button onClick={() => {setShowEditProfile(true)}} className="bg-blue-800 hover:bg-blue-900 rounded-xl p-2 text-white font-semibold">Edit profile</button> : null}
                     </div>
                 </div>
 
