@@ -31,15 +31,15 @@ module.exports = {
             if (!targetUser) return await interaction.editReply("This user has yet to create a profile")
 
             //Check if the current week exists in the user's weeklyMessageCount object
-            if (!targetUser.weeklyMessageCount.has(currWeek)) {
-            return await interaction.editReply(`<@${inputUser}> has not sent any messages this week.`);
+            if (!targetUser.weeklyMessageCount || !targetUser.weeklyMessageCount.has(currWeek)) {
+                return await interaction.editReply(`<@${inputUser}> has not sent any messages this week.`);
             }
             
             //Get message counts for week and current day 
             const currWeekCount = targetUser.weeklyMessageCount.get(currWeek).get('totalCount');
             const currDayCount = targetUser.weeklyMessageCount.get(currWeek).get('dailyCount')[currDay];
 
-        await interaction.editReply(`<@${inputUser}> has sent ${currDayCount} messages today, with a total of ${currWeekCount} messages this week.`)
+            await interaction.editReply(`<@${inputUser}> has sent ${currDayCount} messages today, with a total of ${currWeekCount} messages this week.`)
                                              
 
         
