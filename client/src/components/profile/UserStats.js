@@ -31,7 +31,7 @@ const UserStats = ({ profile }) => {
     }
     return (
         <div className="container mx-auto flex flex-col border-t py-6 border-slate-500">
-            <h1 className="text-[24px] text-white xl:px-0 px-4">Messages</h1>
+            <h1 className="text-[24px] text-white xl:px-0 px-4 md:block hidden">Messages</h1>
             <div className="flex flex-row-reverse justify-between py-2 xl:px-0 px-4">
                 <div className='flex gap-2'>
                     <button className="bg-[#202328] rounded px-2" onClick={() => setWindowOffset(windowOffset - 1)}>
@@ -46,7 +46,8 @@ const UserStats = ({ profile }) => {
                         </svg>
                     </button>
                 </div>
-                {windowWidth >= 768 && <h2 className="text-slate-300">{profile.name}'s message count</h2>}
+                <h2 className="text-slate-300 md:block hidden">{profile.name}'s message count</h2>
+                <h2 className="text-slate-300 md:hidden">Messages</h2>
             </div>
             <div className="relative mx-auto bg-[#202328] xl:border-b-0 border-b border-slate-100 xl:shadow xl:rounded flex xl:flex-row flex-col justify-center w-full xl:py-10 xl:pr-10 xl:pl-5">
                 <BarChart profile={profile} windowOffset={windowOffset} windowWidth={windowWidth} showWeek={showWeek}/>
@@ -85,7 +86,7 @@ const BarChart = ({ profile, windowOffset, windowWidth, showWeek }) => {
                     font: windowWidth >= 1024 ? { size: 18 } : null,
                     color: 'white'
                 },
-                grace: '5%',
+                grace: '10%',
                 ticks: {
                     color: 'white',
                     padding: 10,
