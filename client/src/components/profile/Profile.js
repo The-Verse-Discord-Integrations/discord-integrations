@@ -10,7 +10,7 @@ const Profile = () => {
     const [showEditProfile, setShowEditProfile] = useState(false)
     console.log(profile)
     return (
-        <div className="shadow-inner h-full flex flex-col xl:gap-y-3 relative">
+        <div className="shadow-inner h-full flex flex-col xl:gap-y-3 relative overflow-scroll">
             {profile ?
                 <React.Fragment>
                     <ProfileInfo profile={profile} setShowEditProfile={setShowEditProfile} />
