@@ -16,13 +16,12 @@ const UserStats = ({ profile }) => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth)
 
     useEffect(() => {
-        window.addEventListener("resize", () => {
+        const handleResize = () => {
             setWindowWidth(window.innerWidth)
-            console.log(window.innerWidth)
-        })
-        return () => window.addEventListener("resize", () => {
-            setWindowWidth(window.innerWidth)
-        })
+        }
+        window.addEventListener("resize", handleResize)
+
+        return () => window.removeEventListener("resize", handleResize)
     })
 
     const handleToggleShowWeek = () => {
@@ -49,7 +48,7 @@ const UserStats = ({ profile }) => {
                 <h2 className="text-slate-300 md:block hidden">{profile.name}'s message count</h2>
                 <h2 className="text-slate-300 md:hidden">Messages</h2>
             </div>
-            <div className="relative mx-auto bg-[#202328] xl:border-b-0 border-b border-slate-100 xl:shadow xl:rounded flex xl:flex-row flex-col justify-center w-full xl:py-10 xl:pr-10 xl:pl-5">
+            <div className="relative mx-auto bg-[#202328] xl:border-b-0 xl:shadow xl:rounded flex xl:flex-row flex-col justify-center w-full xl:py-10 xl:pr-10 xl:pl-5 md:py-5 pr-4 pl-1 pb-1">
                 <BarChart profile={profile} windowOffset={windowOffset} windowWidth={windowWidth} showWeek={showWeek}/>
             </div>
         </div>
@@ -59,7 +58,7 @@ const UserStats = ({ profile }) => {
 const BarChart = ({ profile, windowOffset, windowWidth, showWeek }) => {
     const options = {
         responsive: true,
-        aspectRatio: 1 | 2,
+        aspectRatio: windowWidth > 425 ? 1 | 2 : 1 | 1,
         plugins: {
             legend: {
                 position: 'top',

@@ -7,7 +7,10 @@ module.exports = {
     extend: {
       backgroundImage: {
         'login-page': 'url(/components/login/images/image.png)'
-      }
+      },
+      transitionProperty: {
+        'width': 'width'
+    },
     },
   },
   plugins: [],
