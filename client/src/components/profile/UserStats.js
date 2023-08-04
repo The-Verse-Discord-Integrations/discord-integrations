@@ -177,7 +177,7 @@ const getWeekString = (unixWeek, windowWidth) => {
 }
 
 const getDayString = (unixWeek, windowWidth) => {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    // const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     const days = ['Sun','Mon', 'Tues', 'Wed', 'Thr', 'Fri', 'Sat']
     const labels = []
     for (let i = 6; i >= 0; i--) {
