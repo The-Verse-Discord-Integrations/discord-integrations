@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/static/css/main.5f34eb01.css",
+    "main.js": "/static/js/main.aa29f3c8.js",
+    "static/media/VerseLogoAsset.png": "/static/media/VerseLogoAsset.c30e46a66c3d661093f5.png",
+    "index.html": "/index.html",
+    "main.5f34eb01.css.map": "/static/css/main.5f34eb01.css.map",
+    "main.aa29f3c8.js.map": "/static/js/main.aa29f3c8.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.5f34eb01.css",
+    "static/js/main.aa29f3c8.js"
+  ]
+}
